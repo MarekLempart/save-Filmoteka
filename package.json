@@ -2,18 +2,18 @@
   "name": "goit-projekt-filmoteka",
   "version": "0.2.00",
   "description": "",
-  "homepage": "https://krzysztof-goit.github.io/goit-projekt-filmoteka/",
+  "homepage": "https://MarekLempart.github.io/save-Filmoteka/",
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build src/*.html --no-scope-hoist --no-optimize --public-url /goit-projekt-filmoteka/",
+    "build": "parcel build src/*.html --no-scope-hoist --no-optimize --public-url /save-Filmoteka/",
     "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://krzysztof-goit.github.io/goit-projekt-filmoteka.git"
+    "url": "git+https://MarekLempart.github.io/save-Filmoteka.git"
   },
   "keywords": [],
-  "author": "GRUPA 1 <krzysztof-goit@fabrykait.net>",
+  "author": "GRUPA 1 <MarekLempart@fabrykait.net>",
   "license": "ISC",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.12.0",

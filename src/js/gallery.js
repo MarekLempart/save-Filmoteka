@@ -8,7 +8,9 @@ import {
   genresName,
 } from './api';
 import { addToQueue, addToWatchedMovies } from './localstorage';
-import { createPagination, currentPage, setCurrentPage } from './pagination';
+import { createPagination, setCurrentPage } from './pagination';
+
+// import * as basicLightbox from 'basiclightbox';
 
 export let homePageNo = 0;
 let totalPages;

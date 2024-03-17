@@ -1,6 +1,6 @@
 export let currentPage = 1;
 export const itemsPerPage = 20;
-import { getSearchResult, getHomepage } from './gallery';
+import { getHomepage, getSearchResult } from './gallery-save-old';
 
 export const setCurrentPage = value => {
   currentPage = value;

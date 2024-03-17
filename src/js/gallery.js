@@ -121,7 +121,7 @@ export const getSearchResult = async (event, pageNo) => {
       totalPages = response.total_pages;
       movies = response.results;
       createPagination(totalPages); //Wywołanie paginacji
-      //searchInput.value = ''; // Wyczyszczenie pola wyszukiwania
+      searchInput.value = ''; // Wyczyszczenie pola wyszukiwania
       if (response.results.length > 0) {
         notResult.style.display = 'none'; // Ukrycie komunikatu o braku wyników
         clearGallery();

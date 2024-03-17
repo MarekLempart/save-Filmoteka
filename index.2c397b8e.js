@@ -4864,7 +4864,7 @@ const getSearchResult = async (event, pageNo)=>{
         totalPages = response.total_pages;
         movies = response.results;
         (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
-        //searchInput.value = ''; // Wyczyszczenie pola wyszukiwania
+        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
         if (response.results.length > 0) {
             notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
             clearGallery();
@@ -32675,4 +32675,4 @@ RepoInfo;
 
 },{"6b38617303e2f7b9":"lV6sG","@firebase/app":"hMa0D","@firebase/component":"j0Bab","@firebase/util":"fNJf0","@firebase/logger":"5Ik4t","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
 
-//# sourceMappingURL=index.bd8eb73f.js.map
+//# sourceMappingURL=index.2c397b8e.js.map

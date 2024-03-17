@@ -148,17 +148,19 @@ var _mainScss = require("./sass/main.scss");
 //JS Global
 var _api = require("./js/api");
 //import './js/search';
-var _gallery = require("./js/gallery");
-var _markup = require("./js/markup");
-var _localstorage = require("./js/localstorage");
-var _visibilityHeader = require("./js/visibilityHeader");
-var _onOffModal = require("./js/onOffModal");
-var _devTools = require("./js/devTools");
 var _darkMode = require("./js/darkMode");
-var _modalGoitTeam = require("./js/modal-goit-team");
+var _devTools = require("./js/devTools");
 var _firebaseAuthorization = require("./js/firebaseAuthorization");
+var _gallery = require("./js/gallery");
+var _localstorage = require("./js/localstorage");
+var _markup = require("./js/markup");
+var _modalGoitTeam = require("./js/modal-goit-team");
+var _onOffModal = require("./js/onOffModal");
+var _openModal = require("./js/openModal");
+var _renderGallery = require("./js/renderGallery");
+var _visibilityHeader = require("./js/visibilityHeader");
 
-},{"./sass/main.scss":"clpGj","./js/api":"5mmx6","./js/gallery":"bA31f","./js/markup":"6K7Vw","./js/localstorage":"ippo7","./js/visibilityHeader":"kxv7b","./js/onOffModal":"hLtdZ","./js/devTools":"kw7nM","./js/darkMode":"3DurW","./js/modal-goit-team":"8Mni5","./js/firebaseAuthorization":"fukWk"}],"clpGj":[function() {},{}],"5mmx6":[function(require,module,exports) {
+},{"./sass/main.scss":"clpGj","./js/api":"5mmx6","./js/darkMode":"3DurW","./js/devTools":"kw7nM","./js/firebaseAuthorization":"fukWk","./js/gallery":"bA31f","./js/localstorage":"ippo7","./js/markup":"6K7Vw","./js/modal-goit-team":"8Mni5","./js/onOffModal":"hLtdZ","./js/openModal":"72exX","./js/renderGallery":"3VUnj","./js/visibilityHeader":"kxv7b"}],"clpGj":[function() {},{}],"5mmx6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // Genres
@@ -4757,759 +4759,21 @@ Object.entries(HttpStatusCode).forEach(([key, value])=>{
 });
 exports.default = HttpStatusCode;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"bA31f":[function(require,module,exports) {
-// gallery.js
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"3DurW":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "homePageNo", ()=>homePageNo);
-parcelHelpers.export(exports, "getGenres", ()=>getGenres);
-parcelHelpers.export(exports, "getHomepage", ()=>getHomepage);
-parcelHelpers.export(exports, "getSearchResult", ()=>getSearchResult);
-parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
-var _api = require("./api");
-var _localstorage = require("./localstorage");
-var _pagination = require("./pagination");
-let homePageNo = 0;
-let totalPages;
-const getGenres = (genreIds)=>{
-    // Pobranie nazw gatunków z listy genresName zdefiniowanej w api.js
-    const genres = genreIds.map((genreId)=>{
-        const foundGenre = (0, _api.genresName).find((genre)=>genre.id === genreId);
-        return foundGenre ? foundGenre.name : "";
-    });
-    // Zwrócenie połączonej listy gatunków
-    return genres.join(", ");
+parcelHelpers.export(exports, "changeMode", ()=>changeMode);
+const visualBody = document.querySelector("body");
+const visualBtn = document.getElementById("changeMode");
+const changeMode = ()=>{
+    const handleDarkMode = ()=>{
+        if (visualBody.getAttribute("data-mode") === "light") visualBody.setAttribute("data-mode", "dark");
+        else visualBody.setAttribute("data-mode", "light");
+    };
+    visualBtn.addEventListener("click", handleDarkMode);
 };
-const displayWatchedMovies = ()=>{
-    try {
-        const watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
-        const moviesWithGenres = watchedMovies.map((movie)=>{
-            let categories = "Without category";
-            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
-            return {
-                ...movie,
-                categories
-            };
-        });
-        homePageNo = 0;
-        clearGallery();
-        renderGallery(moviesWithGenres, 1);
-    } catch (error) {
-        console.error("Error displaying watched movies:", error);
-    }
-};
-const displayQueuedMovies = ()=>{
-    try {
-        const queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
-        const moviesWithGenres = queuedMovies.map((movie)=>{
-            let categories = "Without category";
-            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
-            return {
-                ...movie,
-                categories
-            };
-        });
-        homePageNo = 0;
-        clearGallery();
-        renderGallery(moviesWithGenres, 1);
-    } catch (error) {
-        console.error("Error displaying queued movies:", error);
-    }
-};
-const displayMovieDetails = (movieDetails)=>{
-    // Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
-    console.log(movieDetails);
-};
-//Obsługa HomePage i Buttonów
 window.addEventListener("DOMContentLoaded", ()=>{
-    getHomepage(1); // Wywołujemy funkcję wyświetlającą HomePage
-    const libraryWatched = document.getElementById("watchedHeader");
-    libraryWatched.addEventListener("click", displayWatchedMovies);
-    const libraryQueued = document.getElementById("queueHeader");
-    libraryQueued.addEventListener("click", displayQueuedMovies);
-// const libraryWatchedButton = document.getElementById('watchedModal');
-// libraryWatchedButton.addEventListener('click', displayWatchedMovies);
-// const libraryQueuedButton = document.getElementById('queueModal');
-// libraryQueuedButton.addEventListener('click', displayQueuedMovies);
-});
-const getHomepage = async (pageNo)=>{
-    try {
-        const response = await (0, _api.fetchTrendingMovies)(pageNo);
-        clearGallery();
-        renderGallery(response.results, 0);
-        homePageNo = pageNo;
-        (0, _pagination.createPagination)(response.total_pages);
-    } catch (error) {
-        console.error("Error fetching trending movies:", error);
-    }
-};
-//Obsługa szukajki
-document.addEventListener("DOMContentLoaded", ()=>{
-    const searchForm = document.getElementById("search-form");
-    const searchInput = document.querySelector(".search-form input");
-    const notResult = document.getElementById("not-result");
-    searchForm.addEventListener("submit", async (event)=>{
-        (0, _pagination.setCurrentPage)(1);
-        getSearchResult(event, 1);
-    });
-});
-const getSearchResult = async (event, pageNo)=>{
-    event.preventDefault();
-    homePageNo = pageNo;
-    const searchInput = document.querySelector(".search-form input");
-    const notResult = document.getElementById("not-result");
-    const searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
-    if (searchQuery) try {
-        const response = await (0, _api.fetchSearchMovies)(searchQuery, homePageNo);
-        totalPages = response.total_pages;
-        movies = response.results;
-        (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
-        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
-        if (response.results.length > 0) {
-            notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
-            clearGallery();
-            renderGallery(movies);
-        } else {
-            notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
-            clearGallery(); // Wyczyszczenie galerii
-        }
-    } catch (error) {
-        console.error("Error fetching search movies:", error);
-    }
-};
-// Renderowanie Galerii
-const renderGallery = (dataGallery, rating)=>{
-    try {
-        // Pobranie danych o filmach z galerii
-        const movies1 = dataGallery;
-        // Znalezienie kontenera dla galerii filmów
-        const galleryContainer = document.getElementById("gallery-container");
-        // Ukrycie komunikatu o braku wyników na start
-        const notResult = document.getElementById("not-result");
-        notResult.style.display = "none";
-        // Sprawdzenie czy lista filmów nie jest pusta
-        if (movies1.length > 0) {
-            // Pobranie danych o najbardziej popularnych filmach
-            const newContent = movies1.map((movie)=>{
-                let posterPath;
-                if (movie.poster_path) posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-                else posterPath = "https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.png?raw=true";
-                // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
-                let categories = "Without category";
-                // Ustalenie roku wydania filmu
-                let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "Without date";
-                // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
-                if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genre)=>genre.name).join(", ");
-                else if (movie.genre_ids && movie.genre_ids.length > 0) {
-                    categories = getGenres(movie.genre_ids);
-                    if (!categories) categories = "Without category";
-                }
-                console.log("rating: ", rating);
-                let rate = rating ? ` <span class="movie-info-rating">${movie.vote_average.toFixed(1)}</span>` : ``;
-                // Zbudowanie kodu HTML dla karty filmu
-                const movieCard = `
-          <div class="movie-card" data-movie-id="${movie.id}">
-          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
-          <div class="movie-details">
-          <p class="movie-title">${movie.title}</p>
-          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
-          </div>
-          </div>
-        `;
-                return movieCard;
-            }).join("");
-            //galleryContainer.innerHTML = newContent;
-            galleryContainer.insertAdjacentHTML("beforeend", newContent);
-            // Wstawienie wygenerowanego kodu HTML do kontenera galerii
-            //galleryContainer.innerHTML = newContent;
-            // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
-            notResult.style.display = "none";
-        } else {
-            // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
-            //galleryContainer.innerHTML = '';
-            notResult.style.display = "block";
-            // Wyczyszczenie galerii
-            clearGallery();
-        }
-        // Obsługa zdarzenia kliknięcia dla każdej karty filmu
-        const movieCards = document.querySelectorAll(".movie-card");
-        movieCards.forEach((card)=>{
-            card.addEventListener("click", async ()=>{
-                const movieId = card.dataset.movieId;
-                // Pobranie szczegółowych informacji o wybranym filmie
-                const movieDetails = await (0, _api.fetchMovieDetails)(movieId);
-                // Otwarcie modalu z informacjami o filmie
-                openModal(movieDetails);
-                // Wyświetlenie dodatkowych informacji o filmie
-                displayMovieDetails(movieDetails);
-            });
-        });
-    } catch (error) {
-        // Obsługa błędu w przypadku problemów z renderowaniem galerii
-        console.error("Error rendering gallery:", error);
-        // Wyświetlenie komunikatu o braku wyników w przypadku błędu
-        const notResult = document.getElementById("not-result");
-        notResult.style.display = "block";
-    }
-};
-// Ukrycie komunikatu o braku wyników na start
-document.addEventListener("DOMContentLoaded", ()=>{
-    const notResult = document.getElementById("not-result");
-    notResult.style.display = "none";
-});
-const clearGallery = ()=>{
-    const galleryContainer = document.getElementById("gallery-container");
-    galleryContainer.innerHTML = ""; // Wyczyszczenie zawartości galerii
-};
-// // Przeniesienie nasłuchiwania zdarzenia kliknięcia przycisku "Trailer" poza funkcję openModal
-// document.addEventListener('DOMContentLoaded', () => {
-//   const trailerButton = document.querySelector('#movieTrailerButton');
-//   trailerButton.target = '_blank';
-//   trailerButton.addEventListener('click', async () => {
-//     try {
-//       // Pobranie identyfikatora filmu
-//       const movieId = movieData.id;
-//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-//       const trailersResponse = await fetchMovieTrailers(movieId);
-//       // Wyświetlenie danych zwiastunu w konsoli
-//       console.log('Trailers:', trailersResponse);
-//       // Sprawdzenie, czy istnieją zwiastuny
-//       if (trailersResponse.results && trailersResponse.results.length > 0) {
-//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
-//         trailersResponse.results.forEach(trailer => {
-//           if (trailer.site === 'YouTube') {
-//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
-//           }
-//         });
-//       } else {
-//         console.log('No trailers available');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching movie trailers:', error);
-//     }
-//   });
-// });
-// Funkcja openModal
-const openModal = (movieData)=>{
-    const modal = document.getElementById("myModal");
-    modal.style.display = "block";
-    const modalContent = document.getElementById("modalContent");
-    modalContent.innerHTML = `
-  <div class="modal-container">
-    <div class="movie-poster-modal">
-      <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${movieData.poster_path}" alt="${movieData.title} Photo">
-    </div>
-    <div class="modal-movie-info">
-      <h2>${movieData.title}</h2>
-
-      <div class="info-item">
-        <div class="pernament-item">
-          <p>Vote / Votes </p>
-          <p>Popularity </p>
-          <p>Orginal Title </p>
-          <p>Genre </p>
-        </div>
-
-        <div class="variables-item">
-          <p><span class="average-vote">${movieData.vote_average.toFixed(1)} </span>/ <span class="count-vote">${movieData.vote_count}</span></p>
-            <p>${movieData.popularity}</p>
-            <p>${movieData.original_title}</p>
-            <p>${movieData.genres.map((genre)=>genre.name).join(", ")}</p>
-        </div>
-      </div>
-      <div class="about-movie">
-        <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
-      </div>
-
-      <div class="modal-buttons">
-        <button class="watchedButton">Add to Watched</button>
-        <button class="queuedButton">Add to Queue</button>
-        <button id="movieTrailerButton">Trailer</button>
-      </div>
-    </div>
-  </div>
-  `;
-    const watchedButton = document.getElementsByClassName("watchedButton")[0];
-    watchedButton.onclick = ()=>{
-        (0, _localstorage.addToWatchedMovies)(movieData);
-    };
-    const queuedButton = document.getElementsByClassName("queuedButton")[0];
-    queuedButton.onclick = ()=>{
-        (0, _localstorage.addToQueue)(movieData);
-    };
-    // // Obsługa zdarzenia kliknięcia przycisku "Trailer"
-    // const trailerButton = document.querySelector('#movieTrailerButton');
-    // trailerButton.addEventListener('click', async () => {
-    //   try {
-    //     // Pobranie identyfikatora filmu
-    //     const movieId = movieData.id;
-    //     // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-    //     const trailersResponse = await fetchMovieTrailers(movieId);
-    //     // Wyświetlenie danych zwiastunu w konsoli
-    //     console.log('Trailers:', trailersResponse);
-    //     // Sprawdzenie, czy istnieją zwiastuny
-    //     if (trailersResponse.results && trailersResponse.results.length > 0) {
-    //       // Otwarcie zwiastunu w modalnym oknie za pomocą biblioteki basicLightbox
-    //       const firstTrailer = trailersResponse.results[0];
-    //       if (firstTrailer.site === 'YouTube') {
-    //         const trailerUrl = `https://www.youtube-nocookie.com/embed/${firstTrailer.key}`;
-    //         // const trailerUrl = `https://www.youtube.com/embed/${firstTrailer.key}`;
-    //         // const trailerUrl = `https://www.youtube.com/watch?v=${firstTrailer.key}`;
-    //         const trailerModal = basicLightbox.create(`
-    //         <iframe width="560" height="315" src="${trailerUrl}" frameborder="0" allowfullscreen></iframe>
-    //       `);
-    //         trailerModal.show();
-    //       }
-    //     } else {
-    //       console.log('No trailers available');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching movie trailers:', error);
-    //   }
-    // });
-    // Obsługa zdarzenia kliknięcia przycisku "Trailer"
-    const trailerButton = document.querySelector("#movieTrailerButton");
-    trailerButton.addEventListener("click", async ()=>{
-        try {
-            // Pobranie identyfikatora filmu
-            const movieId = movieData.id;
-            // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-            const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
-            // Wyświetlenie danych zwiastunu w konsoli
-            console.log("Trailers:", trailersResponse);
-            // Sprawdzenie, czy istnieją zwiastuny
-            if (trailersResponse.results && trailersResponse.results.length > 0) // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
-            trailersResponse.results.forEach((trailer)=>{
-                if (trailer.site === "YouTube") window.open(`https://www.youtube.com/watch?v=${trailer.key}`, "_blank");
-            });
-            else console.log("No trailers available");
-        } catch (error) {
-            console.error("Error fetching movie trailers:", error);
-        }
-    });
-    const closeButton = document.querySelector(".close");
-    closeButton.onclick = ()=>{
-        modal.style.display = "none";
-    };
-    // Obsługa zdarzenia keydown
-    document.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") modal.style.display = "none";
-    });
-    window.onclick = (event)=>{
-        if (event.target == modal) modal.style.display = "none";
-    };
-};
-// //Aleksander Modal
-// const openModal = movieData => {
-//   const modal = document.getElementById('myModal');
-//   modal.style.display = 'block';
-//   const modalContent = document.getElementById('modalContent');
-//   modalContent.innerHTML = `
-//   <div class="modal-container">
-//     <div class="movie-poster-modal">
-//       <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${
-//         movieData.poster_path
-//       }" alt="${movieData.title} Photo">
-//      </div>
-//     <div>
-//       <h2>${movieData.title}</h2>
-//       <div class="info-item">
-//       <p>Vote / Votes
-//       <span>
-//       <span class="average-vote">${movieData.vote_average}</span> /<span class="count-vote">${
-//     movieData.vote_count
-//   }</span>
-//         </span>
-//       </p>
-//       <p>Popularity <span class="info-item-color" >${movieData.popularity}</span></p>
-//       <p>Orginal Title <span class="info-item-color original-title">${
-//         movieData.original_title
-//       }</span></p>
-//       <p>Genre <span class="info-item-color">${getGenres(movieData.genres)}</span></p>
-//       </div>
-//       <div class="about-movie">
-//       <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
-//       </div>
-//       <div class="modal-buttons">
-//         <button class="watchedButton">Add to Watched</button>
-//         <button class="queuedButton">Add to Queue</button>
-//       </div>
-//     </div>
-//     </div>
-//   `;
-//   const watchedButton = document.getElementsByClassName('watchedButton')[0];
-//   watchedButton.onclick = () => {
-//     addToWatchedMovies(movieData);
-//   };
-//   const queuedButton = document.getElementsByClassName('queuedButton')[0];
-//   queuedButton.onclick = () => {
-//     addToQueue(movieData);
-//   };
-//   const trailerButton = document.querySelector('#movieTrailerButton');
-//   trailerButton.target = '_blank';
-//   // trailerButton.addEventListener('click', async () => {
-//   //   try {
-//   //     // Pobranie identyfikatora filmu
-//   //     const movieId = movieData.id;
-//   //     // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-//   //     const trailersResponse = await fetchMovieTrailers(movieId);
-//   //     // Wyświetlenie danych zwiastunu w konsoli
-//   //     console.log('Trailers:', trailersResponse);
-//   //     // Sprawdzenie, czy istnieją zwiastuny
-//   //     if (trailersResponse.results && trailersResponse.results.length > 0) {
-//   //       // Otwarcie pierwszego zwiastunu w nowej karcie przeglądarki, jeśli istnieje
-//   //       const firstTrailer = trailersResponse.results[0];
-//   //       if (firstTrailer.site === 'YouTube') {
-//   //         window.open(`https://www.youtube.com/watch?v=${firstTrailer.key}`, '_blank');
-//   //       }
-//   //     } else {
-//   //       console.log('No trailers available');
-//   //     }
-//   //   } catch (error) {
-//   //     console.error('Error fetching movie trailers:', error);
-//   //   }
-//   // });
-//   trailerButton.addEventListener('click', async () => {
-//     try {
-//       // Pobranie identyfikatora filmu
-//       const movieId = movieData.id;
-//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-//       const trailersResponse = await fetchMovieTrailers(movieId);
-//       // Wyświetlenie danych zwiastunu w konsoli
-//       console.log('Trailers:', trailersResponse);
-//       // Sprawdzenie, czy istnieją zwiastuny
-//       if (trailersResponse.results && trailersResponse.results.length > 0) {
-//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
-//         trailersResponse.results.forEach(trailer => {
-//           if (trailer.site === 'YouTube') {
-//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
-//           }
-//         });
-//       } else {
-//         console.log('No trailers available');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching movie trailers:', error);
-//     }
-//   });
-//   const span = document.getElementsByClassName('close')[0];
-//   span.onclick = () => {
-//     modal.style.display = 'none';
-//   };
-//   // Obsługa zdarzenia keydown
-//   document.addEventListener('keydown', function (event) {
-//     if (event.key === 'Escape') {
-//       modal.style.display = 'none';
-//     }
-//   });
-//   window.onclick = event => {
-//     if (event.target == modal) {
-//       modal.style.display = 'none';
-//     }
-//   };
-// };
-//scrollToTop by Marek
-const scrollToTopButton = document.getElementById("scrollToTopButton");
-// Pokaż przycisk, gdy użytkownik przewinie stronę w dół
-window.addEventListener("scroll", ()=>{
-    if (window.pageYOffset > 100) // Możesz dostosować wartość, aby przycisk pojawił się po przewinięciu o określoną liczbę pikseli
-    scrollToTopButton.style.display = "block";
-    else scrollToTopButton.style.display = "none";
-});
-// Obsługa zdarzenia kliknięcia przycisku
-scrollToTopButton.addEventListener("click", ()=>{
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-});
-// Funkcja do sprawdzania, czy element jest blisko dolnej krawędzi okna przeglądarki
-function isNearBottom(element, threshold) {
-    const rect = element.getBoundingClientRect();
-    return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + threshold;
-}
-// Event scroll na oknie przeglądarki
-const loadMoreContent = ()=>{
-    // Element, który monitorujemy, np. kontener na treści
-    const contentContainer = document.querySelector(".movie-card:last-child");
-    // Threshold - odległość od dolnej krawędzi, przy której chcemy zacząć ładować więcej treści
-    const threshold = 800; // w pikselach
-    // Sprawdzamy, czy element jest blisko dolnej krawędzi okna przeglądarki
-    if (isNearBottom(contentContainer, threshold)) {
-        // Jeśli tak, ładujemy więcej treści
-        if (homePageNo > 0) homePageNo++;
-        getHomepage(homePageNo);
-    }
-};
-const infinityScroll = document.getElementById("infinityScroll");
-let isInfinityScrollActive = false;
-// Obsługa zdarzenia kliknięcia przycisku
-infinityScroll.addEventListener("click", ()=>{
-    if (isInfinityScrollActive) // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
-    window.removeEventListener("scroll", loadMoreContent);
-    else // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
-    window.addEventListener("scroll", loadMoreContent);
-    // Zmiana stanu - włącz/wyłącz
-    isInfinityScrollActive = !isInfinityScrollActive;
-    // Początkowe ładowanie treści
-    getHomepage(homePageNo);
-    // Event scroll na oknie przeglądarki po kliknięciu przycisku
-    window.addEventListener("scroll", loadMoreContent);
-    // Usuń obsługę zdarzenia kliknięcia przycisku, aby nie powtarzać ładowania po kliknięciu
-    infinityScroll.removeEventListener("click", loadMoreContent);
-});
-
-},{"./api":"5mmx6","./localstorage":"ippo7","./pagination":"iC8Tx","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"ippo7":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "addToWatchedMovies", ()=>addToWatchedMovies);
-parcelHelpers.export(exports, "addToQueue", ()=>addToQueue);
-const addToWatchedMovies = (movieDetails)=>{
-    // Pobierz listę obejrzanych filmów z localStorage lub utwórz nową listę, jeśli nie istnieje
-    let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
-    if (!Array.isArray(watchedMovies)) watchedMovies = [];
-    let isMovieAlreadyWatched = watchedMovies.find((movie)=>movie.id === movieDetails.id);
-    //pobierz liste filmów z kolejki z local storage zeby ussunąć w razie wuz
-    let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
-    // Jeśli film jeszcze nie został obejrzany, dodaj go do listy
-    if (!isMovieAlreadyWatched) {
-        watchedMovies.push(movieDetails);
-        localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
-        console.log(`Added "${movieDetails.title}" to Watched Movies`);
-        //usuwa filmy jeśli znadjują sie w kolejce
-        queuedMovies = queuedMovies.filter((movie)=>movie.id !== movieDetails.id);
-        localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
-        refreshView();
-    } else console.log(`"${movieDetails.title}" is already in Watched Movies`);
-};
-const addToQueue = (movieDetails)=>{
-    let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
-    let isMovieInQueue = queuedMovies.find((movie)=>movie.id === movieDetails.id);
-    //pobierz liste filmów z obejrzanych z local storage zeby ussunąć w razie wu
-    let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
-    if (!isMovieInQueue) {
-        queuedMovies.push(movieDetails);
-        localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
-        console.log(`Added "${movieDetails.title}" to Queue `);
-        //usuwa filmy dodane do obejrzanych
-        watchedMovies = watchedMovies.filter((movie)=>movie.id !== movieDetails.id);
-        localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
-        refreshView();
-    } else console.log(`"${movieDetails.title}" is already in Queue`);
-};
-const refreshView = ()=>{
-//Tutaj wstawię później funkcje która będzie odświerzać widok po zmianie
-//Z queue do watched
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"iC8Tx":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "currentPage", ()=>currentPage);
-parcelHelpers.export(exports, "itemsPerPage", ()=>itemsPerPage);
-parcelHelpers.export(exports, "setCurrentPage", ()=>setCurrentPage);
-parcelHelpers.export(exports, "updatePageView", ()=>updatePageView);
-parcelHelpers.export(exports, "createPagination", ()=>createPagination);
-var _gallery = require("./gallery");
-let currentPage = 1;
-const itemsPerPage = 20;
-const setCurrentPage = (value)=>{
-    currentPage = value;
-};
-const updatePageView = (currentPage)=>{
-    const paginationButtons = document.querySelectorAll(".pagin-btn");
-    paginationButtons.forEach((button)=>{
-        if (parseInt(button.textContent) === currentPage) button.classList.add("current-page");
-        else button.classList.remove("current-page");
-    });
-};
-const createPagination = (totalPages)=>{
-    // const paginationContainer = document.getElementById('pagination-container');
-    const paginationPages = document.querySelector(".pagination-pages");
-    paginationPages.innerHTML = ""; // Wyczyszczenie paginacji
-    currentPage = parseInt(currentPage);
-    if (totalPages <= 5) for(let i = 1; i <= totalPages; i++){
-        let displayPage = i;
-        const pageButton = document.createElement("button");
-        pageButton.textContent = displayPage;
-        pageButton.classList.add("pagin-btn");
-        paginationPages.appendChild(pageButton);
-    }
-    else {
-        // Dodanie trzech kropek po pierwszej stronie
-        const firstShownPage = Math.max(currentPage - 2, 1);
-        const lastShownPage = Math.min(currentPage + 2, totalPages);
-        if (firstShownPage > 1) {
-            // Dodanie pierwszej strony
-            const firstPageButton = document.createElement("button");
-            firstPageButton.textContent = 1;
-            firstPageButton.classList.add("pagin-btn");
-            paginationPages.appendChild(firstPageButton);
-            const dots1 = document.createElement("span");
-            dots1.textContent = "...";
-            dots1.classList.add("dots");
-            dots1.setAttribute("disabled", true);
-            paginationPages.appendChild(dots1);
-        }
-        for(let i = firstShownPage; i <= lastShownPage; i++){
-            const pageButton = document.createElement("button");
-            pageButton.textContent = i;
-            pageButton.classList.add("pagin-btn");
-            paginationPages.appendChild(pageButton);
-        }
-        // Dodanie trzech kropek przed ostatnią stroną
-        if (currentPage < lastShownPage) {
-            const dots2 = document.createElement("span");
-            dots2.textContent = "...";
-            dots2.classList.add("dots");
-            dots2.setAttribute("disabled", true);
-            paginationPages.appendChild(dots2);
-            // Dodanie ostatniej strony
-            const lastPageButton = document.createElement("button");
-            lastPageButton.textContent = totalPages;
-            lastPageButton.classList.add("pagin-btn");
-            paginationPages.appendChild(lastPageButton);
-        }
-    }
-    if (currentPage === 1) document.querySelector("#icon-arrow-left2").classList.add("hidden");
-    else document.querySelector("#icon-arrow-left2").classList.remove("hidden");
-    if (currentPage == totalPages) document.querySelector("#icon-arrow-right2").classList.add("hidden");
-    else document.querySelector("#icon-arrow-right2").classList.remove("hidden");
-    updatePageView(currentPage);
-};
-const loadPage = (e, currentPage)=>{
-    const searchInput = document.querySelector(".search-form input");
-    if (searchInput.value !== "") (0, _gallery.getSearchResult)(e, currentPage);
-    else (0, _gallery.getHomepage)(currentPage);
-};
-document.querySelector("#pagination-container").addEventListener("click", (e)=>{
-    e.preventDefault();
-    if (e.target.tagName == "BUTTON") {
-        currentPage = e.target.innerHTML;
-        loadPage(e, currentPage);
-    } else if (e.target.tagName == "A") {
-        if (e.target.firstElementChild.id === "icon-arrow-left2") {
-            currentPage -= 1;
-            loadPage(e, currentPage);
-        } else if (e.target.firstElementChild.id === "icon-arrow-right2") {
-            currentPage += 1;
-            loadPage(e, currentPage);
-        }
-    }
-});
-
-},{"./gallery":"bA31f","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"6K7Vw":[function(require,module,exports) {
-
-},{}],"kxv7b":[function(require,module,exports) {
-var _gallery = require("./gallery");
-const headerNaviElements = document.getElementsByClassName("header-navi");
-const headerBG = document.getElementById("headerBG");
-const homeLink = headerNaviElements[0].getElementsByTagName("a")[0];
-const libraryLink = headerNaviElements[0].getElementsByTagName("a")[1];
-const logIn = headerNaviElements[0].getElementsByTagName("a")[2];
-const logInContainer = document.querySelector(".sign-in-container");
-const registerButton = document.getElementById("register-button");
-const loginButton = document.getElementById("login-button");
-const logoutButton = document.getElementById("logout-button");
-const myLibrary = document.querySelector(".header-library");
-const headerSearch = document.querySelector(".header-search");
-const watchedButton = document.getElementById("watchedHeader");
-const paginationButtons = document.getElementById("pagination-container");
-const logo = document.getElementById("logo");
-const toggleVisibility = (elementToShow, elementToHide)=>{
-    elementToShow.style.visibility = "visible";
-    elementToHide.style.visibility = "hidden";
-    elementToShow.style.display = "flex";
-    elementToHide.style.display = "none";
-};
-const libraryClick = ()=>{
-    watchedHeader.click();
-};
-const setHeaderBackground = ()=>{
-    const screenWidth = window.innerWidth;
-    let backgroundImageUrl = "";
-    if (myLibrary.style.display === "flex") {
-        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-desktop.jpg?raw=true")';
-        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-tablet.jpg?raw=true")';
-        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-mobile.jpg?raw=true")';
-    } else if (headerSearch.style.display === "flex") {
-        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
-        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
-        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
-    } else {
-        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
-        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
-        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
-    }
-    headerBG.style.backgroundImage = backgroundImageUrl;
-};
-setHeaderBackground();
-const homeButtonClick = (event)=>{
-    event.preventDefault();
-    toggleVisibility(headerSearch, myLibrary);
-    homeLink.classList.add("active");
-    libraryLink.classList.remove("active");
-    setHeaderBackground();
-    paginationButtons.style.display = "flex";
-    (0, _gallery.clearGallery)();
-    (0, _gallery.getHomepage)(1);
-};
-const myLibraryButtonClick = (event)=>{
-    event.preventDefault();
-    toggleVisibility(myLibrary, headerSearch);
-    homeLink.classList.remove("active");
-    libraryLink.classList.add("active");
-    setHeaderBackground();
-    paginationButtons.style.display = "none";
-    libraryClick(watchedButton);
-};
-logo.addEventListener("click", homeButtonClick);
-homeLink.addEventListener("click", homeButtonClick);
-libraryLink.addEventListener("click", myLibraryButtonClick);
-logIn.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "block";
-});
-loginButton.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "none";
-});
-registerButton.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "none";
-});
-logoutButton.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "none";
-});
-window.addEventListener("resize", setHeaderBackground);
-if (myLibrary.style.display !== "flex") {
-    const headerLibraryElements = document.querySelectorAll(".header-library");
-    headerLibraryElements.forEach((element)=>{
-        element.style.display = "none";
-    });
-}
-
-},{"./gallery":"bA31f"}],"hLtdZ":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "toggleModal", ()=>toggleModal);
-const toggleModal = (modalId)=>{
-    const modal = document.getElementById(modalId);
-    if (modal) modal.style.display = modal.style.display === "block" ? "none" : "block";
-};
-//wydaje mi się że chciałeś zrobić to w ten sposób kwestia wyboru
-//    if (modal) {
-//     modal.style.visibility = modal.style.visibility === 'visible' ? 'hidden' : 'visible';
-//   }
-// };   
-const openModalBtns = document.querySelectorAll(".openModalBtn");
-// dla każdego przycisku otwórz modal
-openModalBtns.forEach((btn)=>{
-    btn.addEventListener("click", ()=>{
-        const modalId = btn.getAttribute("id");
-        toggleModal(modalId);
-    });
+    changeMode();
 });
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"kw7nM":[function(require,module,exports) {
@@ -5614,47 +4878,6 @@ const toggleMonitorClass = ()=>{
     else galleryContainer.classList.add("monitor-wide");
 };
 wideContainer.addEventListener("click", toggleMonitorClass);
-
-},{}],"3DurW":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "changeMode", ()=>changeMode);
-const visualBody = document.querySelector("body");
-const visualBtn = document.getElementById("changeMode");
-const changeMode = ()=>{
-    const handleDarkMode = ()=>{
-        if (visualBody.getAttribute("data-mode") === "light") visualBody.setAttribute("data-mode", "dark");
-        else visualBody.setAttribute("data-mode", "light");
-    };
-    visualBtn.addEventListener("click", handleDarkMode);
-};
-window.addEventListener("DOMContentLoaded", ()=>{
-    changeMode();
-});
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"8Mni5":[function(require,module,exports) {
-// Pobranie okna modalnego
-const modal = document.getElementById("modalGoit");
-// Pobranie przycisku, który otwiera okno modalne
-const btn = document.querySelector(".footer-btn"); // Zmiana na pobranie przycisku po klasie
-// Pobranie elementu <span>, który zamyka okno modalne
-const span = document.querySelector(".close-modal-btn-goit"); // Zmienione na querySelector dla spójności
-// Kiedy użytkownik kliknie na przycisk, otwórz okno modalne
-btn.onclick = function() {
-    modal.style.display = "block";
-};
-// Kiedy użytkownik kliknie na <span> (x), zamknij okno modalne
-span.onclick = function() {
-    modal.style.display = "none";
-};
-// Kiedy użytkownik kliknie poza oknem modalnym, zamknij je
-window.onclick = function(event) {
-    if (event.target == modal) modal.style.display = "none";
-};
-// Dodanie obsługi zamknięcia okna modalnego przez naciśnięcie klawisza Esc
-document.onkeydown = function(event) {
-    if (event.key === "Escape") modal.style.display = "none";
-};
 
 },{}],"fukWk":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -32673,6 +31896,1505 @@ RepoInfo;
  * @packageDocumentation
  */ registerDatabase();
 
-},{"6b38617303e2f7b9":"lV6sG","@firebase/app":"hMa0D","@firebase/component":"j0Bab","@firebase/util":"fNJf0","@firebase/logger":"5Ik4t","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
+},{"6b38617303e2f7b9":"lV6sG","@firebase/app":"hMa0D","@firebase/component":"j0Bab","@firebase/util":"fNJf0","@firebase/logger":"5Ik4t","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"bA31f":[function(require,module,exports) {
+// gallery.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "homePageNo", ()=>homePageNo);
+parcelHelpers.export(exports, "getGenres", ()=>getGenres);
+parcelHelpers.export(exports, "getHomepage", ()=>getHomepage);
+parcelHelpers.export(exports, "getSearchResult", ()=>getSearchResult);
+parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
+var _api = require("./api");
+// import { createPagination, setCurrentPage } from './pagination';
+// import { createPagination, currentPage, setCurrentPage } from './pagination';
+var _pagination = require("./pagination");
+var _renderGallery = require("./renderGallery"); // Dodano import funkcji związanych z galerią
+let homePageNo = 0;
+let totalPages;
+const getGenres = (genreIds)=>{
+    // Pobranie nazw gatunków z listy genresName zdefiniowanej w api.js
+    const genres = genreIds.map((genreId)=>{
+        const foundGenre = (0, _api.genresName).find((genre)=>genre.id === genreId);
+        return foundGenre ? foundGenre.name : "";
+    });
+    // Zwrócenie połączonej listy gatunków
+    return genres.join(", ");
+};
+const displayWatchedMovies = ()=>{
+    try {
+        const watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+        const moviesWithGenres = watchedMovies.map((movie)=>{
+            let categories = "Without category";
+            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
+            return {
+                ...movie,
+                categories
+            };
+        });
+        homePageNo = 0;
+        (0, _renderGallery.clearGallery)();
+        (0, _renderGallery.renderGallery)(moviesWithGenres, 1);
+    } catch (error) {
+        console.error("Error displaying watched movies:", error);
+    }
+};
+const displayQueuedMovies = ()=>{
+    try {
+        const queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
+        const moviesWithGenres = queuedMovies.map((movie)=>{
+            let categories = "Without category";
+            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
+            return {
+                ...movie,
+                categories
+            };
+        });
+        homePageNo = 0;
+        (0, _renderGallery.clearGallery)();
+        (0, _renderGallery.renderGallery)(moviesWithGenres, 1);
+    } catch (error) {
+        console.error("Error displaying queued movies:", error);
+    }
+};
+//Obsługa HomePage i Buttonów
+window.addEventListener("DOMContentLoaded", ()=>{
+    getHomepage(1); // Wywołujemy funkcję wyświetlającą HomePage
+    const libraryWatched = document.getElementById("watchedHeader");
+    libraryWatched.addEventListener("click", displayWatchedMovies);
+    const libraryQueued = document.getElementById("queueHeader");
+    libraryQueued.addEventListener("click", displayQueuedMovies);
+// const libraryWatchedButton = document.getElementById('watchedModal');
+// libraryWatchedButton.addEventListener('click', displayWatchedMovies);
+// const libraryQueuedButton = document.getElementById('queueModal');
+// libraryQueuedButton.addEventListener('click', displayQueuedMovies);
+});
+const getHomepage = async (pageNo)=>{
+    try {
+        const response = await (0, _api.fetchTrendingMovies)(pageNo);
+        (0, _renderGallery.clearGallery)();
+        (0, _renderGallery.renderGallery)(response.results, 0);
+        homePageNo = pageNo;
+        (0, _pagination.createPagination)(response.total_pages);
+    } catch (error) {
+        console.error("Error fetching trending movies:", error);
+    }
+};
+//Obsługa szukajki
+document.addEventListener("DOMContentLoaded", ()=>{
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    searchForm.addEventListener("submit", async (event)=>{
+        (0, _pagination.setCurrentPage)(1);
+        getSearchResult(event, 1);
+    });
+});
+const getSearchResult = async (event, pageNo)=>{
+    event.preventDefault();
+    homePageNo = pageNo;
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    const searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
+    if (searchQuery) try {
+        const response = await (0, _api.fetchSearchMovies)(searchQuery, homePageNo);
+        totalPages = response.total_pages;
+        movies = response.results;
+        (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
+        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
+        if (response.results.length > 0) {
+            notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
+            (0, _renderGallery.clearGallery)();
+            (0, _renderGallery.renderGallery)(movies);
+        } else {
+            notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
+            (0, _renderGallery.clearGallery)(); // Wyczyszczenie galerii
+        }
+    } catch (error) {
+        console.error("Error fetching search movies:", error);
+    }
+};
+// Ukrycie komunikatu o braku wyników na start
+document.addEventListener("DOMContentLoaded", ()=>{
+    const notResult = document.getElementById("not-result");
+    notResult.style.display = "none";
+});
+const clearGallery = ()=>{
+    const galleryContainer = document.getElementById("gallery-container");
+    galleryContainer.innerHTML = ""; // Wyczyszczenie zawartości galerii
+};
+// // Funkcja openModal
+// export const openModal = movieData => {
+//   const modal = document.getElementById('myModal');
+//   modal.style.display = 'block';
+//   const modalContent = document.getElementById('modalContent');
+//   modalContent.innerHTML = `
+//   <div class="modal-container">
+//     <div class="movie-poster-modal">
+//       <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${
+//         movieData.poster_path
+//       }" alt="${movieData.title} Photo">
+//     </div>
+//     <div class="modal-movie-info">
+//       <h2>${movieData.title}</h2>
+//       <div class="info-item">
+//         <div class="pernament-item">
+//           <p>Vote / Votes </p>
+//           <p>Popularity </p>
+//           <p>Orginal Title </p>
+//           <p>Genre </p>
+//         </div>
+//         <div class="variables-item">
+//           <p><span class="average-vote">${movieData.vote_average.toFixed(
+//             1,
+//           )} </span>/ <span class="count-vote">${movieData.vote_count}</span></p>
+//             <p>${movieData.popularity}</p>
+//             <p>${movieData.original_title}</p>
+//             <p>${movieData.genres.map(genre => genre.name).join(', ')}</p>
+//         </div>
+//       </div>
+//       <div class="about-movie">
+//         <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
+//       </div>
+//       <div class="modal-buttons">
+//         <button class="watchedButton">Add to Watched</button>
+//         <button class="queuedButton">Add to Queue</button>
+//         <button id="movieTrailerButton">Trailer</button>
+//       </div>
+//     </div>
+//   </div>
+//   `;
+//   const watchedButton = document.getElementsByClassName('watchedButton')[0];
+//   watchedButton.onclick = () => {
+//     addToWatchedMovies(movieData);
+//   };
+//   const queuedButton = document.getElementsByClassName('queuedButton')[0];
+//   queuedButton.onclick = () => {
+//     addToQueue(movieData);
+//   };
+//   // Obsługa zdarzenia kliknięcia przycisku "Trailer"
+//   const trailerButton = document.querySelector('#movieTrailerButton');
+//   trailerButton.addEventListener('click', async () => {
+//     try {
+//       // Pobranie identyfikatora filmu
+//       const movieId = movieData.id;
+//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+//       const trailersResponse = await fetchMovieTrailers(movieId);
+//       // Wyświetlenie danych zwiastunu w konsoli
+//       console.log('Trailers:', trailersResponse);
+//       // Sprawdzenie, czy istnieją zwiastuny
+//       if (trailersResponse.results && trailersResponse.results.length > 0) {
+//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
+//         trailersResponse.results.forEach(trailer => {
+//           if (trailer.site === 'YouTube') {
+//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+//           }
+//         });
+//       } else {
+//         console.log('No trailers available');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching movie trailers:', error);
+//     }
+//   });
+//   const closeButton = document.querySelector('.close');
+//   closeButton.onclick = () => {
+//     modal.style.display = 'none';
+//   };
+//   // Obsługa zdarzenia keydown
+//   document.addEventListener('keydown', function (event) {
+//     if (event.key === 'Escape') {
+//       modal.style.display = 'none';
+//     }
+//   });
+//   window.onclick = event => {
+//     if (event.target == modal) {
+//       modal.style.display = 'none';
+//     }
+//   };
+// };
+//scrollToTop by Marek
+const scrollToTopButton = document.getElementById("scrollToTopButton");
+// Pokaż przycisk, gdy użytkownik przewinie stronę w dół
+window.addEventListener("scroll", ()=>{
+    if (window.pageYOffset > 100) // Możesz dostosować wartość, aby przycisk pojawił się po przewinięciu o określoną liczbę pikseli
+    scrollToTopButton.style.display = "block";
+    else scrollToTopButton.style.display = "none";
+});
+// Obsługa zdarzenia kliknięcia przycisku
+scrollToTopButton.addEventListener("click", ()=>{
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+// Funkcja do sprawdzania, czy element jest blisko dolnej krawędzi okna przeglądarki
+function isNearBottom(element, threshold) {
+    const rect = element.getBoundingClientRect();
+    return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + threshold;
+}
+// Event scroll na oknie przeglądarki
+const loadMoreContent = ()=>{
+    // Element, który monitorujemy, np. kontener na treści
+    const contentContainer = document.querySelector(".movie-card:last-child");
+    // Threshold - odległość od dolnej krawędzi, przy której chcemy zacząć ładować więcej treści
+    const threshold = 800; // w pikselach
+    // Sprawdzamy, czy element jest blisko dolnej krawędzi okna przeglądarki
+    if (isNearBottom(contentContainer, threshold)) {
+        // Jeśli tak, ładujemy więcej treści
+        if (homePageNo > 0) homePageNo++;
+        getHomepage(homePageNo);
+    }
+};
+const infinityScroll = document.getElementById("infinityScroll");
+let isInfinityScrollActive = false;
+// Obsługa zdarzenia kliknięcia przycisku
+infinityScroll.addEventListener("click", ()=>{
+    if (isInfinityScrollActive) // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
+    window.removeEventListener("scroll", loadMoreContent);
+    else // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
+    window.addEventListener("scroll", loadMoreContent);
+    // Zmiana stanu - włącz/wyłącz
+    isInfinityScrollActive = !isInfinityScrollActive;
+    // Początkowe ładowanie treści
+    getHomepage(homePageNo);
+    // Event scroll na oknie przeglądarki po kliknięciu przycisku
+    window.addEventListener("scroll", loadMoreContent);
+    // Usuń obsługę zdarzenia kliknięcia przycisku, aby nie powtarzać ładowania po kliknięciu
+    infinityScroll.removeEventListener("click", loadMoreContent);
+});
 
-//# sourceMappingURL=index.2c397b8e.js.map
+},{"./api":"5mmx6","./pagination":"iC8Tx","./renderGallery":"3VUnj","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"iC8Tx":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "currentPage", ()=>currentPage);
+parcelHelpers.export(exports, "itemsPerPage", ()=>itemsPerPage);
+parcelHelpers.export(exports, "setCurrentPage", ()=>setCurrentPage);
+parcelHelpers.export(exports, "updatePageView", ()=>updatePageView);
+parcelHelpers.export(exports, "createPagination", ()=>createPagination);
+var _gallerySaveOld = require("./gallery-save-old");
+let currentPage = 1;
+const itemsPerPage = 20;
+const setCurrentPage = (value)=>{
+    currentPage = value;
+};
+const updatePageView = (currentPage)=>{
+    const paginationButtons = document.querySelectorAll(".pagin-btn");
+    paginationButtons.forEach((button)=>{
+        if (parseInt(button.textContent) === currentPage) button.classList.add("current-page");
+        else button.classList.remove("current-page");
+    });
+};
+const createPagination = (totalPages)=>{
+    // const paginationContainer = document.getElementById('pagination-container');
+    const paginationPages = document.querySelector(".pagination-pages");
+    paginationPages.innerHTML = ""; // Wyczyszczenie paginacji
+    currentPage = parseInt(currentPage);
+    if (totalPages <= 5) for(let i = 1; i <= totalPages; i++){
+        let displayPage = i;
+        const pageButton = document.createElement("button");
+        pageButton.textContent = displayPage;
+        pageButton.classList.add("pagin-btn");
+        paginationPages.appendChild(pageButton);
+    }
+    else {
+        // Dodanie trzech kropek po pierwszej stronie
+        const firstShownPage = Math.max(currentPage - 2, 1);
+        const lastShownPage = Math.min(currentPage + 2, totalPages);
+        if (firstShownPage > 1) {
+            // Dodanie pierwszej strony
+            const firstPageButton = document.createElement("button");
+            firstPageButton.textContent = 1;
+            firstPageButton.classList.add("pagin-btn");
+            paginationPages.appendChild(firstPageButton);
+            const dots1 = document.createElement("span");
+            dots1.textContent = "...";
+            dots1.classList.add("dots");
+            dots1.setAttribute("disabled", true);
+            paginationPages.appendChild(dots1);
+        }
+        for(let i = firstShownPage; i <= lastShownPage; i++){
+            const pageButton = document.createElement("button");
+            pageButton.textContent = i;
+            pageButton.classList.add("pagin-btn");
+            paginationPages.appendChild(pageButton);
+        }
+        // Dodanie trzech kropek przed ostatnią stroną
+        if (currentPage < lastShownPage) {
+            const dots2 = document.createElement("span");
+            dots2.textContent = "...";
+            dots2.classList.add("dots");
+            dots2.setAttribute("disabled", true);
+            paginationPages.appendChild(dots2);
+            // Dodanie ostatniej strony
+            const lastPageButton = document.createElement("button");
+            lastPageButton.textContent = totalPages;
+            lastPageButton.classList.add("pagin-btn");
+            paginationPages.appendChild(lastPageButton);
+        }
+    }
+    if (currentPage === 1) document.querySelector("#icon-arrow-left2").classList.add("hidden");
+    else document.querySelector("#icon-arrow-left2").classList.remove("hidden");
+    if (currentPage == totalPages) document.querySelector("#icon-arrow-right2").classList.add("hidden");
+    else document.querySelector("#icon-arrow-right2").classList.remove("hidden");
+    updatePageView(currentPage);
+};
+const loadPage = (e, currentPage)=>{
+    const searchInput = document.querySelector(".search-form input");
+    if (searchInput.value !== "") (0, _gallerySaveOld.getSearchResult)(e, currentPage);
+    else (0, _gallerySaveOld.getHomepage)(currentPage);
+};
+document.querySelector("#pagination-container").addEventListener("click", (e)=>{
+    e.preventDefault();
+    if (e.target.tagName == "BUTTON") {
+        currentPage = e.target.innerHTML;
+        loadPage(e, currentPage);
+    } else if (e.target.tagName == "A") {
+        if (e.target.firstElementChild.id === "icon-arrow-left2") {
+            currentPage -= 1;
+            loadPage(e, currentPage);
+        } else if (e.target.firstElementChild.id === "icon-arrow-right2") {
+            currentPage += 1;
+            loadPage(e, currentPage);
+        }
+    }
+});
+
+},{"./gallery-save-old":"iVkPG","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"iVkPG":[function(require,module,exports) {
+// gallery.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "homePageNo", ()=>homePageNo);
+parcelHelpers.export(exports, "getGenres", ()=>getGenres);
+parcelHelpers.export(exports, "getHomepage", ()=>getHomepage);
+parcelHelpers.export(exports, "getSearchResult", ()=>getSearchResult);
+parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
+var _api = require("./api");
+var _localstorage = require("./localstorage");
+var _pagination = require("./pagination");
+let homePageNo = 0;
+let totalPages;
+const getGenres = (genreIds)=>{
+    // Pobranie nazw gatunków z listy genresName zdefiniowanej w api.js
+    const genres = genreIds.map((genreId)=>{
+        const foundGenre = (0, _api.genresName).find((genre)=>genre.id === genreId);
+        return foundGenre ? foundGenre.name : "";
+    });
+    // Zwrócenie połączonej listy gatunków
+    return genres.join(", ");
+};
+const displayWatchedMovies = ()=>{
+    try {
+        const watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+        const moviesWithGenres = watchedMovies.map((movie)=>{
+            let categories = "Without category";
+            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
+            return {
+                ...movie,
+                categories
+            };
+        });
+        homePageNo = 0;
+        clearGallery();
+        renderGallery(moviesWithGenres, 1);
+    } catch (error) {
+        console.error("Error displaying watched movies:", error);
+    }
+};
+const displayQueuedMovies = ()=>{
+    try {
+        const queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
+        const moviesWithGenres = queuedMovies.map((movie)=>{
+            let categories = "Without category";
+            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
+            return {
+                ...movie,
+                categories
+            };
+        });
+        homePageNo = 0;
+        clearGallery();
+        renderGallery(moviesWithGenres, 1);
+    } catch (error) {
+        console.error("Error displaying queued movies:", error);
+    }
+};
+const displayMovieDetails = (movieDetails)=>{
+    // Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
+    console.log(movieDetails);
+};
+//Obsługa HomePage i Buttonów
+window.addEventListener("DOMContentLoaded", ()=>{
+    getHomepage(1); // Wywołujemy funkcję wyświetlającą HomePage
+    const libraryWatched = document.getElementById("watchedHeader");
+    libraryWatched.addEventListener("click", displayWatchedMovies);
+    const libraryQueued = document.getElementById("queueHeader");
+    libraryQueued.addEventListener("click", displayQueuedMovies);
+// const libraryWatchedButton = document.getElementById('watchedModal');
+// libraryWatchedButton.addEventListener('click', displayWatchedMovies);
+// const libraryQueuedButton = document.getElementById('queueModal');
+// libraryQueuedButton.addEventListener('click', displayQueuedMovies);
+});
+const getHomepage = async (pageNo)=>{
+    try {
+        const response = await (0, _api.fetchTrendingMovies)(pageNo);
+        clearGallery();
+        renderGallery(response.results, 0);
+        homePageNo = pageNo;
+        (0, _pagination.createPagination)(response.total_pages);
+    } catch (error) {
+        console.error("Error fetching trending movies:", error);
+    }
+};
+//Obsługa szukajki
+document.addEventListener("DOMContentLoaded", ()=>{
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    searchForm.addEventListener("submit", async (event)=>{
+        (0, _pagination.setCurrentPage)(1);
+        getSearchResult(event, 1);
+    });
+});
+const getSearchResult = async (event, pageNo)=>{
+    event.preventDefault();
+    homePageNo = pageNo;
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    const searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
+    if (searchQuery) try {
+        const response = await (0, _api.fetchSearchMovies)(searchQuery, homePageNo);
+        totalPages = response.total_pages;
+        movies = response.results;
+        (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
+        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
+        if (response.results.length > 0) {
+            notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
+            clearGallery();
+            renderGallery(movies);
+        } else {
+            notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
+            clearGallery(); // Wyczyszczenie galerii
+        }
+    } catch (error) {
+        console.error("Error fetching search movies:", error);
+    }
+};
+// Renderowanie Galerii
+const renderGallery = (dataGallery, rating)=>{
+    try {
+        // Pobranie danych o filmach z galerii
+        const movies1 = dataGallery;
+        // Znalezienie kontenera dla galerii filmów
+        const galleryContainer = document.getElementById("gallery-container");
+        // Ukrycie komunikatu o braku wyników na start
+        const notResult = document.getElementById("not-result");
+        notResult.style.display = "none";
+        // Sprawdzenie czy lista filmów nie jest pusta
+        if (movies1.length > 0) {
+            // Pobranie danych o najbardziej popularnych filmach
+            const newContent = movies1.map((movie)=>{
+                let posterPath;
+                if (movie.poster_path) posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+                else posterPath = "https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.png?raw=true";
+                // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
+                let categories = "Without category";
+                // Ustalenie roku wydania filmu
+                let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "Without date";
+                // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
+                if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genre)=>genre.name).join(", ");
+                else if (movie.genre_ids && movie.genre_ids.length > 0) {
+                    categories = getGenres(movie.genre_ids);
+                    if (!categories) categories = "Without category";
+                }
+                console.log("rating: ", rating);
+                let rate = rating ? ` <span class="movie-info-rating">${movie.vote_average.toFixed(1)}</span>` : ``;
+                // Zbudowanie kodu HTML dla karty filmu
+                const movieCard = `
+          <div class="movie-card" data-movie-id="${movie.id}">
+          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
+          <div class="movie-details">
+          <p class="movie-title">${movie.title}</p>
+          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
+          </div>
+          </div>
+        `;
+                return movieCard;
+            }).join("");
+            //galleryContainer.innerHTML = newContent;
+            galleryContainer.insertAdjacentHTML("beforeend", newContent);
+            // Wstawienie wygenerowanego kodu HTML do kontenera galerii
+            //galleryContainer.innerHTML = newContent;
+            // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
+            notResult.style.display = "none";
+        } else {
+            // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
+            //galleryContainer.innerHTML = '';
+            notResult.style.display = "block";
+            // Wyczyszczenie galerii
+            clearGallery();
+        }
+        // Obsługa zdarzenia kliknięcia dla każdej karty filmu
+        const movieCards = document.querySelectorAll(".movie-card");
+        movieCards.forEach((card)=>{
+            card.addEventListener("click", async ()=>{
+                const movieId = card.dataset.movieId;
+                // Pobranie szczegółowych informacji o wybranym filmie
+                const movieDetails = await (0, _api.fetchMovieDetails)(movieId);
+                // Otwarcie modalu z informacjami o filmie
+                openModal(movieDetails);
+                // Wyświetlenie dodatkowych informacji o filmie
+                displayMovieDetails(movieDetails);
+            });
+        });
+    } catch (error) {
+        // Obsługa błędu w przypadku problemów z renderowaniem galerii
+        console.error("Error rendering gallery:", error);
+        // Wyświetlenie komunikatu o braku wyników w przypadku błędu
+        const notResult = document.getElementById("not-result");
+        notResult.style.display = "block";
+    }
+};
+// Ukrycie komunikatu o braku wyników na start
+document.addEventListener("DOMContentLoaded", ()=>{
+    const notResult = document.getElementById("not-result");
+    notResult.style.display = "none";
+});
+const clearGallery = ()=>{
+    const galleryContainer = document.getElementById("gallery-container");
+    galleryContainer.innerHTML = ""; // Wyczyszczenie zawartości galerii
+};
+// // Przeniesienie nasłuchiwania zdarzenia kliknięcia przycisku "Trailer" poza funkcję openModal
+// document.addEventListener('DOMContentLoaded', () => {
+//   const trailerButton = document.querySelector('#movieTrailerButton');
+//   trailerButton.target = '_blank';
+//   trailerButton.addEventListener('click', async () => {
+//     try {
+//       // Pobranie identyfikatora filmu
+//       const movieId = movieData.id;
+//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+//       const trailersResponse = await fetchMovieTrailers(movieId);
+//       // Wyświetlenie danych zwiastunu w konsoli
+//       console.log('Trailers:', trailersResponse);
+//       // Sprawdzenie, czy istnieją zwiastuny
+//       if (trailersResponse.results && trailersResponse.results.length > 0) {
+//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
+//         trailersResponse.results.forEach(trailer => {
+//           if (trailer.site === 'YouTube') {
+//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+//           }
+//         });
+//       } else {
+//         console.log('No trailers available');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching movie trailers:', error);
+//     }
+//   });
+// });
+// Funkcja openModal
+const openModal = (movieData)=>{
+    const modal = document.getElementById("myModal");
+    modal.style.display = "block";
+    const modalContent = document.getElementById("modalContent");
+    modalContent.innerHTML = `
+  <div class="modal-container">
+    <div class="movie-poster-modal">
+      <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${movieData.poster_path}" alt="${movieData.title} Photo">
+    </div>
+    <div class="modal-movie-info">
+      <h2>${movieData.title}</h2>
+
+      <div class="info-item">
+        <div class="pernament-item">
+          <p>Vote / Votes </p>
+          <p>Popularity </p>
+          <p>Orginal Title </p>
+          <p>Genre </p>
+        </div>
+
+        <div class="variables-item">
+          <p><span class="average-vote">${movieData.vote_average.toFixed(1)} </span>/ <span class="count-vote">${movieData.vote_count}</span></p>
+            <p>${movieData.popularity}</p>
+            <p>${movieData.original_title}</p>
+            <p>${movieData.genres.map((genre)=>genre.name).join(", ")}</p>
+        </div>
+      </div>
+      <div class="about-movie">
+        <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
+      </div>
+
+      <div class="modal-buttons">
+        <button class="watchedButton">Add to Watched</button>
+        <button class="queuedButton">Add to Queue</button>
+        <button id="movieTrailerButton">Trailer</button>
+      </div>
+    </div>
+  </div>
+  `;
+    const watchedButton = document.getElementsByClassName("watchedButton")[0];
+    watchedButton.onclick = ()=>{
+        (0, _localstorage.addToWatchedMovies)(movieData);
+    };
+    const queuedButton = document.getElementsByClassName("queuedButton")[0];
+    queuedButton.onclick = ()=>{
+        (0, _localstorage.addToQueue)(movieData);
+    };
+    // // Obsługa zdarzenia kliknięcia przycisku "Trailer"
+    // const trailerButton = document.querySelector('#movieTrailerButton');
+    // trailerButton.addEventListener('click', async () => {
+    //   try {
+    //     // Pobranie identyfikatora filmu
+    //     const movieId = movieData.id;
+    //     // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+    //     const trailersResponse = await fetchMovieTrailers(movieId);
+    //     // Wyświetlenie danych zwiastunu w konsoli
+    //     console.log('Trailers:', trailersResponse);
+    //     // Sprawdzenie, czy istnieją zwiastuny
+    //     if (trailersResponse.results && trailersResponse.results.length > 0) {
+    //       // Otwarcie zwiastunu w modalnym oknie za pomocą biblioteki basicLightbox
+    //       const firstTrailer = trailersResponse.results[0];
+    //       if (firstTrailer.site === 'YouTube') {
+    //         const trailerUrl = `https://www.youtube-nocookie.com/embed/${firstTrailer.key}`;
+    //         // const trailerUrl = `https://www.youtube.com/embed/${firstTrailer.key}`;
+    //         // const trailerUrl = `https://www.youtube.com/watch?v=${firstTrailer.key}`;
+    //         const trailerModal = basicLightbox.create(`
+    //         <iframe width="560" height="315" src="${trailerUrl}" frameborder="0" allowfullscreen></iframe>
+    //       `);
+    //         trailerModal.show();
+    //       }
+    //     } else {
+    //       console.log('No trailers available');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error fetching movie trailers:', error);
+    //   }
+    // });
+    // Obsługa zdarzenia kliknięcia przycisku "Trailer"
+    const trailerButton = document.querySelector("#movieTrailerButton");
+    trailerButton.addEventListener("click", async ()=>{
+        try {
+            // Pobranie identyfikatora filmu
+            const movieId = movieData.id;
+            // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+            const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
+            // Wyświetlenie danych zwiastunu w konsoli
+            console.log("Trailers:", trailersResponse);
+            // Sprawdzenie, czy istnieją zwiastuny
+            if (trailersResponse.results && trailersResponse.results.length > 0) // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
+            trailersResponse.results.forEach((trailer)=>{
+                if (trailer.site === "YouTube") window.open(`https://www.youtube.com/watch?v=${trailer.key}`, "_blank");
+            });
+            else console.log("No trailers available");
+        } catch (error) {
+            console.error("Error fetching movie trailers:", error);
+        }
+    });
+    const closeButton = document.querySelector(".close");
+    closeButton.onclick = ()=>{
+        modal.style.display = "none";
+    };
+    // Obsługa zdarzenia keydown
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") modal.style.display = "none";
+    });
+    window.onclick = (event)=>{
+        if (event.target == modal) modal.style.display = "none";
+    };
+};
+// //Aleksander Modal
+// const openModal = movieData => {
+//   const modal = document.getElementById('myModal');
+//   modal.style.display = 'block';
+//   const modalContent = document.getElementById('modalContent');
+//   modalContent.innerHTML = `
+//   <div class="modal-container">
+//     <div class="movie-poster-modal">
+//       <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${
+//         movieData.poster_path
+//       }" alt="${movieData.title} Photo">
+//      </div>
+//     <div>
+//       <h2>${movieData.title}</h2>
+//       <div class="info-item">
+//       <p>Vote / Votes
+//       <span>
+//       <span class="average-vote">${movieData.vote_average}</span> /<span class="count-vote">${
+//     movieData.vote_count
+//   }</span>
+//         </span>
+//       </p>
+//       <p>Popularity <span class="info-item-color" >${movieData.popularity}</span></p>
+//       <p>Orginal Title <span class="info-item-color original-title">${
+//         movieData.original_title
+//       }</span></p>
+//       <p>Genre <span class="info-item-color">${getGenres(movieData.genres)}</span></p>
+//       </div>
+//       <div class="about-movie">
+//       <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
+//       </div>
+//       <div class="modal-buttons">
+//         <button class="watchedButton">Add to Watched</button>
+//         <button class="queuedButton">Add to Queue</button>
+//       </div>
+//     </div>
+//     </div>
+//   `;
+//   const watchedButton = document.getElementsByClassName('watchedButton')[0];
+//   watchedButton.onclick = () => {
+//     addToWatchedMovies(movieData);
+//   };
+//   const queuedButton = document.getElementsByClassName('queuedButton')[0];
+//   queuedButton.onclick = () => {
+//     addToQueue(movieData);
+//   };
+//   const trailerButton = document.querySelector('#movieTrailerButton');
+//   trailerButton.target = '_blank';
+//   // trailerButton.addEventListener('click', async () => {
+//   //   try {
+//   //     // Pobranie identyfikatora filmu
+//   //     const movieId = movieData.id;
+//   //     // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+//   //     const trailersResponse = await fetchMovieTrailers(movieId);
+//   //     // Wyświetlenie danych zwiastunu w konsoli
+//   //     console.log('Trailers:', trailersResponse);
+//   //     // Sprawdzenie, czy istnieją zwiastuny
+//   //     if (trailersResponse.results && trailersResponse.results.length > 0) {
+//   //       // Otwarcie pierwszego zwiastunu w nowej karcie przeglądarki, jeśli istnieje
+//   //       const firstTrailer = trailersResponse.results[0];
+//   //       if (firstTrailer.site === 'YouTube') {
+//   //         window.open(`https://www.youtube.com/watch?v=${firstTrailer.key}`, '_blank');
+//   //       }
+//   //     } else {
+//   //       console.log('No trailers available');
+//   //     }
+//   //   } catch (error) {
+//   //     console.error('Error fetching movie trailers:', error);
+//   //   }
+//   // });
+//   trailerButton.addEventListener('click', async () => {
+//     try {
+//       // Pobranie identyfikatora filmu
+//       const movieId = movieData.id;
+//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+//       const trailersResponse = await fetchMovieTrailers(movieId);
+//       // Wyświetlenie danych zwiastunu w konsoli
+//       console.log('Trailers:', trailersResponse);
+//       // Sprawdzenie, czy istnieją zwiastuny
+//       if (trailersResponse.results && trailersResponse.results.length > 0) {
+//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
+//         trailersResponse.results.forEach(trailer => {
+//           if (trailer.site === 'YouTube') {
+//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
+//           }
+//         });
+//       } else {
+//         console.log('No trailers available');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching movie trailers:', error);
+//     }
+//   });
+//   const span = document.getElementsByClassName('close')[0];
+//   span.onclick = () => {
+//     modal.style.display = 'none';
+//   };
+//   // Obsługa zdarzenia keydown
+//   document.addEventListener('keydown', function (event) {
+//     if (event.key === 'Escape') {
+//       modal.style.display = 'none';
+//     }
+//   });
+//   window.onclick = event => {
+//     if (event.target == modal) {
+//       modal.style.display = 'none';
+//     }
+//   };
+// };
+//scrollToTop by Marek
+const scrollToTopButton = document.getElementById("scrollToTopButton");
+// Pokaż przycisk, gdy użytkownik przewinie stronę w dół
+window.addEventListener("scroll", ()=>{
+    if (window.pageYOffset > 100) // Możesz dostosować wartość, aby przycisk pojawił się po przewinięciu o określoną liczbę pikseli
+    scrollToTopButton.style.display = "block";
+    else scrollToTopButton.style.display = "none";
+});
+// Obsługa zdarzenia kliknięcia przycisku
+scrollToTopButton.addEventListener("click", ()=>{
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+// Funkcja do sprawdzania, czy element jest blisko dolnej krawędzi okna przeglądarki
+function isNearBottom(element, threshold) {
+    const rect = element.getBoundingClientRect();
+    return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + threshold;
+}
+// Event scroll na oknie przeglądarki
+const loadMoreContent = ()=>{
+    // Element, który monitorujemy, np. kontener na treści
+    const contentContainer = document.querySelector(".movie-card:last-child");
+    // Threshold - odległość od dolnej krawędzi, przy której chcemy zacząć ładować więcej treści
+    const threshold = 800; // w pikselach
+    // Sprawdzamy, czy element jest blisko dolnej krawędzi okna przeglądarki
+    if (isNearBottom(contentContainer, threshold)) {
+        // Jeśli tak, ładujemy więcej treści
+        if (homePageNo > 0) homePageNo++;
+        getHomepage(homePageNo);
+    }
+};
+const infinityScroll = document.getElementById("infinityScroll");
+let isInfinityScrollActive = false;
+// Obsługa zdarzenia kliknięcia przycisku
+infinityScroll.addEventListener("click", ()=>{
+    if (isInfinityScrollActive) // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
+    window.removeEventListener("scroll", loadMoreContent);
+    else // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
+    window.addEventListener("scroll", loadMoreContent);
+    // Zmiana stanu - włącz/wyłącz
+    isInfinityScrollActive = !isInfinityScrollActive;
+    // Początkowe ładowanie treści
+    getHomepage(homePageNo);
+    // Event scroll na oknie przeglądarki po kliknięciu przycisku
+    window.addEventListener("scroll", loadMoreContent);
+    // Usuń obsługę zdarzenia kliknięcia przycisku, aby nie powtarzać ładowania po kliknięciu
+    infinityScroll.removeEventListener("click", loadMoreContent);
+});
+
+},{"./api":"5mmx6","./localstorage":"ippo7","./pagination":"iC8Tx","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"ippo7":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "addToWatchedMovies", ()=>addToWatchedMovies);
+parcelHelpers.export(exports, "addToQueue", ()=>addToQueue);
+const addToWatchedMovies = (movieDetails)=>{
+    // Pobierz listę obejrzanych filmów z localStorage lub utwórz nową listę, jeśli nie istnieje
+    let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+    if (!Array.isArray(watchedMovies)) watchedMovies = [];
+    let isMovieAlreadyWatched = watchedMovies.find((movie)=>movie.id === movieDetails.id);
+    //pobierz liste filmów z kolejki z local storage zeby ussunąć w razie wuz
+    let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
+    // Jeśli film jeszcze nie został obejrzany, dodaj go do listy
+    if (!isMovieAlreadyWatched) {
+        watchedMovies.push(movieDetails);
+        localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
+        console.log(`Added "${movieDetails.title}" to Watched Movies`);
+        //usuwa filmy jeśli znadjują sie w kolejce
+        queuedMovies = queuedMovies.filter((movie)=>movie.id !== movieDetails.id);
+        localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
+        refreshView();
+    } else console.log(`"${movieDetails.title}" is already in Watched Movies`);
+};
+const addToQueue = (movieDetails)=>{
+    let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
+    let isMovieInQueue = queuedMovies.find((movie)=>movie.id === movieDetails.id);
+    //pobierz liste filmów z obejrzanych z local storage zeby ussunąć w razie wu
+    let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+    if (!isMovieInQueue) {
+        queuedMovies.push(movieDetails);
+        localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
+        console.log(`Added "${movieDetails.title}" to Queue `);
+        //usuwa filmy dodane do obejrzanych
+        watchedMovies = watchedMovies.filter((movie)=>movie.id !== movieDetails.id);
+        localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
+        refreshView();
+    } else console.log(`"${movieDetails.title}" is already in Queue`);
+};
+const refreshView = ()=>{
+//Tutaj wstawię później funkcje która będzie odświerzać widok po zmianie
+//Z queue do watched
+};
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"3VUnj":[function(require,module,exports) {
+// renderGallery.js
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "renderGallery", ()=>renderGallery);
+parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
+parcelHelpers.export(exports, "displayMovieDetails", ()=>displayMovieDetails);
+var _api = require("./api");
+var _gallery = require("./gallery");
+var _openModal = require("./openModal");
+const renderGallery = (dataGallery, rating)=>{
+    try {
+        // Pobranie danych o filmach z galerii
+        const movies = dataGallery;
+        // Znalezienie kontenera dla galerii filmów
+        const galleryContainer = document.getElementById("gallery-container");
+        // Ukrycie komunikatu o braku wyników na start
+        const notResult = document.getElementById("not-result");
+        notResult.style.display = "none";
+        // Sprawdzenie czy lista filmów nie jest pusta
+        if (movies.length > 0) {
+            // Pobranie danych o najbardziej popularnych filmach
+            const newContent = movies.map((movie)=>{
+                let posterPath;
+                if (movie.poster_path) posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+                else posterPath = "../img/kolaz-w-tle-filmu.png";
+                // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
+                let categories = "Without category";
+                // Ustalenie roku wydania filmu
+                let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "Without date";
+                // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
+                if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genre)=>genre.name).join(", ");
+                else if (movie.genre_ids && movie.genre_ids.length > 0) {
+                    categories = (0, _gallery.getGenres)(movie.genre_ids);
+                    if (!categories) categories = "Without category";
+                }
+                console.log("rating: ", rating);
+                let rate = rating ? ` <span class="movie-info-rating">${movie.vote_average.toFixed(1)}</span>` : ``;
+                // Zbudowanie kodu HTML dla karty filmu
+                const movieCard = `
+          <div class="movie-card" data-movie-id="${movie.id}">
+          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
+          <div class="movie-details">
+          <p class="movie-title">${movie.title}</p>
+          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
+          </div>
+          </div>
+        `;
+                return movieCard;
+            }).join("");
+            //galleryContainer.innerHTML = newContent;
+            galleryContainer.insertAdjacentHTML("beforeend", newContent);
+            // Wstawienie wygenerowanego kodu HTML do kontenera galerii
+            //galleryContainer.innerHTML = newContent;
+            // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
+            notResult.style.display = "none";
+        } else {
+            // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
+            //galleryContainer.innerHTML = '';
+            notResult.style.display = "block";
+            // Wyczyszczenie galerii
+            clearGallery();
+        }
+        // Obsługa zdarzenia kliknięcia dla każdej karty filmu
+        const movieCards = document.querySelectorAll(".movie-card");
+        movieCards.forEach((card)=>{
+            card.addEventListener("click", async ()=>{
+                const movieId = card.dataset.movieId;
+                // Pobranie szczegółowych informacji o wybranym filmie
+                const movieDetails = await (0, _api.fetchMovieDetails)(movieId);
+                // Otwarcie modalu z informacjami o filmie
+                (0, _openModal.openModal)(movieDetails);
+                // Wyświetlenie dodatkowych informacji o filmie
+                displayMovieDetails(movieDetails);
+            });
+        });
+    } catch (error) {
+        // Obsługa błędu w przypadku problemów z renderowaniem galerii
+        console.error("Error rendering gallery:", error);
+        // Wyświetlenie komunikatu o braku wyników w przypadku błędu
+        const notResult = document.getElementById("not-result");
+        notResult.style.display = "block";
+    }
+};
+const clearGallery = ()=>{
+    const galleryContainer = document.getElementById("gallery-container");
+    galleryContainer.innerHTML = "";
+};
+const displayMovieDetails = (movieDetails)=>{
+    // Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
+    console.log(movieDetails);
+};
+
+},{"./api":"5mmx6","./gallery":"bA31f","./openModal":"72exX","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"72exX":[function(require,module,exports) {
+// openModal.js
+// import basicLightbox from 'basiclightbox';
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "openModal", ()=>openModal);
+var _basiclightbox = require("basiclightbox");
+var _api = require("./api");
+var _localstorage = require("./localstorage");
+const openModal = (movieData)=>{
+    const modal = document.getElementById("myModal");
+    modal.style.display = "block";
+    const modalContent = document.getElementById("modalContent");
+    modalContent.innerHTML = `
+      <div class="modal-container">
+        <div class="movie-poster-modal">
+          <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${movieData.poster_path}" alt="${movieData.title} Photo" data-movie-id="${movieData.id}">
+        </div>
+
+        <div class="modal-movie-info">
+          <h2>${movieData.title}</h2>
+          <div class="info-item">
+            <div class="pernament-item">
+              <p>Vote / Votes </p>
+              <p>Popularity </p>
+              <p>Orginal Title </p>
+              <p>Genre </p>
+            </div>
+            <div class="variables-item">
+              <p><span class="average-vote">${movieData.vote_average.toFixed(1)}</span> / <span class="count-vote">${movieData.vote_count}</span></p>
+              <p>${movieData.popularity}</p>
+              <p>${movieData.original_title}</p>
+              <p>${movieData.genres.map((genre)=>genre.name).join(", ")}</p>
+            </div>
+          </div>
+          <div class="about-movie">
+            <p><span class="about-movie-details">About</span><br> ${movieData.overview}</p>
+          </div>
+          <div class="modal-buttons">
+            <button class="watchedButton">Add to Watched</button>
+            <button class="queuedButton">Add to Queue</button>
+            <button id="movieTrailerButton">Trailer</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const watchedButton = document.getElementsByClassName("watchedButton")[0];
+    watchedButton.onclick = ()=>{
+        (0, _localstorage.addToWatchedMovies)(movieData);
+    };
+    const queuedButton = document.getElementsByClassName("queuedButton")[0];
+    queuedButton.onclick = ()=>{
+        (0, _localstorage.addToQueue)(movieData);
+    };
+    //   // Obsługa zdarzenia kliknięcia przycisku "Trailer"
+    //   const trailerButton = document.querySelector('#movieTrailerButton');
+    //   trailerButton.addEventListener('click', async () => {
+    //     try {
+    //       // Pobranie identyfikatora filmu
+    //       const movieId = movieData.id;
+    //       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+    //       const trailersResponse = await fetchMovieTrailers(movieId);
+    //       // Wyświetlenie danych zwiastunu w konsoli
+    //       console.log('Trailers:', trailersResponse);
+    //       // Sprawdzenie, czy istnieją zwiastuny
+    //       if (trailersResponse.results && trailersResponse.results.length > 0) {
+    //         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
+    //         trailersResponse.results.forEach(trailer => {
+    //           if (trailer.site === 'YouTube') {
+    //             // Odtwarzanie losowego zwiastunu z listy, jeśli nie ma "Official Trailer"
+    //             const randomTrailer =
+    //               trailersResponse.results[Math.floor(Math.random() * trailersResponse.results.length)];
+    //             window.open(`https://www.youtube.com/watch?v=${randomTrailer.key}`, '_blank');
+    //           }
+    //         });
+    //       } else {
+    //         console.log('No trailers available');
+    //       }
+    //     } catch (error) {
+    //       console.error('Error fetching movie trailers:', error);
+    //     }
+    //   });
+    // Obsługa zdarzenia kliknięcia przycisku "Trailer"
+    const trailerButton = document.querySelector("#movieTrailerButton");
+    trailerButton.addEventListener("click", async ()=>{
+        try {
+            // Pobranie identyfikatora filmu
+            const movieId = movieData.id;
+            // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+            const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
+            // Wyświetlenie danych zwiastunu w konsoli
+            console.log("Trailers:", trailersResponse);
+            // Sprawdzenie, czy istnieją zwiastuny
+            if (trailersResponse.results && trailersResponse.results.length > 0) {
+                // Otwarcie zwiastunu w modalnym oknie za pomocą biblioteki basicLightbox
+                const firstTrailer = trailersResponse.results[0];
+                if (firstTrailer.site === "YouTube") {
+                    const trailerUrl = `https://www.youtube-nocookie.com/embed/${firstTrailer.key}`;
+                    // const trailerUrl = `https://www.youtube.com/embed/${firstTrailer.key}`;
+                    // const trailerUrl = `https://www.youtube.com/watch?v=${firstTrailer.key}`;
+                    const trailerModal = _basiclightbox.create(`
+          <iframe width="560" height="315" src="${trailerUrl}" frameborder="0" allowfullscreen></iframe>
+        `);
+                    trailerModal.show();
+                }
+            } else console.log("No trailers available");
+        } catch (error) {
+            console.error("Error fetching movie trailers:", error);
+        }
+    });
+    // Dodanie event listenera dla kliknięcia na każdy plakat filmu
+    const moviePosters = document.querySelectorAll(".movie-poster");
+    moviePosters.forEach((poster)=>{
+        poster.addEventListener("click", async ()=>{
+            try {
+                // Pobranie identyfikatora filmu z atrybutu data
+                const movieId = poster.getAttribute("data-movie-id");
+                // Sprawdzenie, czy identyfikator filmu nie jest pusty
+                if (movieId) {
+                    // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+                    const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
+                    // Wyświetlenie danych zwiastunu w konsoli
+                    console.log("Trailers:", trailersResponse);
+                    // Sprawdzenie, czy istnieją zwiastuny
+                    if (trailersResponse.results && trailersResponse.results.length > 0) {
+                        // Sprawdzenie, czy istnieje zwiastun o nazwie "Official Trailer"
+                        const officialTrailer = trailersResponse.results.find((trailer)=>trailer.name === "Official Trailer");
+                        if (officialTrailer) // Odtwarzanie zwiastunu "Official Trailer", jeśli istnieje
+                        window.open(`https://www.youtube.com/watch?v=${officialTrailer.key}`, "_blank");
+                        else {
+                            // Odtwarzanie losowego zwiastunu z listy, jeśli nie ma "Official Trailer"
+                            const randomTrailer = trailersResponse.results[Math.floor(Math.random() * trailersResponse.results.length)];
+                            window.open(`https://www.youtube.com/watch?v=${randomTrailer.key}`, "_blank");
+                        }
+                    } else console.log("No trailers available");
+                } else console.error("Movie ID is missing"); // Komunikat o błędzie, gdy identyfikator filmu jest pusty
+            } catch (error) {
+                console.error("Error fetching movie trailers:", error);
+            }
+        });
+    });
+    const closeButton = document.querySelector(".close");
+    closeButton.onclick = ()=>{
+        modal.style.display = "none";
+    };
+    // Obsługa zdarzenia keydown
+    document.addEventListener("keydown", (event)=>{
+        if (event.key === "Escape") modal.style.display = "none";
+    });
+    window.onclick = (event)=>{
+        if (event.target == modal) modal.style.display = "none";
+    };
+}; // // Wersja testowa z biblioteką basicLightbox:
+ // import { fetchMovieTrailers } from './api';
+ // import { addToQueue, addToWatchedMovies } from './localstorage';
+ // import basicLightbox from 'basiclightbox';
+ // export const openModal = movieData => {
+ //   const modal = document.getElementById('myModal');
+ //   modal.style.display = 'block';
+ //   const modalContent = document.getElementById('modalContent');
+ //   modalContent.innerHTML = `
+ //     <div class="modal-container">
+ //       <div class="movie-poster-modal">
+ //         <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${movieData.poster_path}" alt="${movieData.title} Photo" data-movie-id="${movieData.id}">
+ //       </div>
+ //       <div class="modal-movie-info">
+ //         <h2>${movieData.title}</h2>
+ //         <div class="info-item">
+ //           <div class="pernament-item">
+ //             <p>Vote / Votes </p>
+ //             <p>Popularity </p>
+ //             <p>Orginal Title </p>
+ //             <p>Genre </p>
+ //           </div>
+ //           <div class="variables-item">
+ //             <p><span class="average-vote">${movieData.vote_average.toFixed(1)}</span> / <span class="count-vote">${movieData.vote_count}</span></p>
+ //             <p>${movieData.popularity}</p>
+ //             <p>${movieData.original_title}</p>
+ //             <p>${movieData.genres.map(genre => genre.name).join(', ')}</p>
+ //           </div>
+ //         </div>
+ //         <div class="about-movie">
+ //           <p><span class="about-movie-details">About</span><br> ${movieData.overview}</p>
+ //         </div>
+ //         <div class="modal-buttons">
+ //           <button class="watchedButton">Add to Watched</button>
+ //           <button class="queuedButton">Add to Queue</button>
+ //           <button id="movieTrailerButton">Trailer</button>
+ //         </div>
+ //       </div>
+ //     </div>
+ //   `;
+ //   const watchedButton = document.querySelector('.watchedButton');
+ //   watchedButton.addEventListener('click', () => {
+ //     addToWatchedMovies(movieData);
+ //   });
+ //   const queuedButton = document.querySelector('.queuedButton');
+ //   queuedButton.addEventListener('click', () => {
+ //     addToQueue(movieData);
+ //   });
+ //   const trailerButton = document.getElementById('movieTrailerButton');
+ //   trailerButton.addEventListener('click', async () => {
+ //     try {
+ //       const movieId = movieData.id;
+ //       const trailersResponse = await fetchMovieTrailers(movieId);
+ //       if (trailersResponse.results && trailersResponse.results.length > 0) {
+ //         const officialTrailer = trailersResponse.results.find(trailer => trailer.name === 'Official Trailer');
+ //         const trailerToPlay = officialTrailer ? officialTrailer : trailersResponse.results[Math.floor(Math.random() * trailersResponse.results.length)];
+ //         basicLightbox.create(`
+ //           <iframe width="560" height="315" src="https://www.youtube.com/embed/${trailerToPlay.key}" frameborder="0" allowfullscreen></iframe>
+ //         `).show();
+ //       } else {
+ //         console.log('No trailers available');
+ //       }
+ //     } catch (error) {
+ //       console.error('Error fetching movie trailers:', error);
+ //     }
+ //   });
+ //   const moviePosters = document.querySelectorAll('.movie-poster');
+ //   moviePosters.forEach(poster => {
+ //     poster.addEventListener('click', async () => {
+ //       try {
+ //         const movieId = poster.getAttribute('data-movie-id');
+ //         const trailersResponse = await fetchMovieTrailers(movieId);
+ //         if (trailersResponse.results && trailersResponse.results.length > 0) {
+ //           const officialTrailer = trailersResponse.results.find(trailer => trailer.name === 'Official Trailer');
+ //           const trailerToPlay = officialTrailer ? officialTrailer : trailersResponse.results[Math.floor(Math.random() * trailersResponse.results.length)];
+ //           basicLightbox.create(`
+ //             <iframe width="560" height="315" src="https://www.youtube.com/embed/${trailerToPlay.key}" frameborder="0" allowfullscreen></iframe>
+ //           `).show();
+ //         } else {
+ //           console.log('No trailers available');
+ //         }
+ //       } catch (error) {
+ //         console.error('Error fetching movie trailers:', error);
+ //       }
+ //     });
+ //   });
+ //   const closeButton = document.querySelector('.close');
+ //   closeButton.addEventListener('click', () => {
+ //     modal.style.display = 'none';
+ //   });
+ //   document.addEventListener('keydown', event => {
+ //     if (event.key === 'Escape') {
+ //       modal.style.display = 'none';
+ //     }
+ //   });
+ //   window.addEventListener('click', event => {
+ //     if (event.target === modal) {
+ //       modal.style.display = 'none';
+ //     }
+ //   });
+ // };
+
+},{"basiclightbox":"3Y0qn","./api":"5mmx6","./localstorage":"ippo7","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"3Y0qn":[function(require,module,exports) {
+!function(e) {
+    module.exports = e();
+}(function() {
+    return (function e(n, t, o) {
+        function r(c, u) {
+            if (!t[c]) {
+                if (!n[c]) {
+                    var s = undefined;
+                    if (!u && s) return s(c, !0);
+                    if (i) return i(c, !0);
+                    var a = new Error("Cannot find module '" + c + "'");
+                    throw a.code = "MODULE_NOT_FOUND", a;
+                }
+                var l = t[c] = {
+                    exports: {}
+                };
+                n[c][0].call(l.exports, function(e) {
+                    return r(n[c][1][e] || e);
+                }, l, l.exports, e, n, t, o);
+            }
+            return t[c].exports;
+        }
+        for(var i = undefined, c = 0; c < o.length; c++)r(o[c]);
+        return r;
+    })({
+        1: [
+            function(e, n, t) {
+                "use strict";
+                Object.defineProperty(t, "__esModule", {
+                    value: !0
+                }), t.create = t.visible = void 0;
+                var o = function(e) {
+                    var n = arguments.length > 1 && void 0 !== arguments[1] && arguments[1], t = document.createElement("div");
+                    return t.innerHTML = e.trim(), !0 === n ? t.children : t.firstChild;
+                }, r = function(e, n) {
+                    var t = e.children;
+                    return 1 === t.length && t[0].tagName === n;
+                }, i = function(e) {
+                    return null != (e = e || document.querySelector(".basicLightbox")) && !0 === e.ownerDocument.body.contains(e);
+                };
+                t.visible = i;
+                t.create = function(e, n) {
+                    var t = function(e, n) {
+                        var t = o('\n		<div class="basicLightbox '.concat(n.className, '">\n			<div class="basicLightbox__placeholder" role="dialog"></div>\n		</div>\n	')), i = t.querySelector(".basicLightbox__placeholder");
+                        e.forEach(function(e) {
+                            return i.appendChild(e);
+                        });
+                        var c = r(i, "IMG"), u = r(i, "VIDEO"), s = r(i, "IFRAME");
+                        return !0 === c && t.classList.add("basicLightbox--img"), !0 === u && t.classList.add("basicLightbox--video"), !0 === s && t.classList.add("basicLightbox--iframe"), t;
+                    }(e = function(e) {
+                        var n = "string" == typeof e, t = e instanceof HTMLElement == 1;
+                        if (!1 === n && !1 === t) throw new Error("Content must be a DOM element/node or string");
+                        return !0 === n ? Array.from(o(e, !0)) : "TEMPLATE" === e.tagName ? [
+                            e.content.cloneNode(!0)
+                        ] : Array.from(e.children);
+                    }(e), n = function() {
+                        var e = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+                        if (null == (e = Object.assign({}, e)).closable && (e.closable = !0), null == e.className && (e.className = ""), null == e.onShow && (e.onShow = function() {}), null == e.onClose && (e.onClose = function() {}), "boolean" != typeof e.closable) throw new Error("Property `closable` must be a boolean");
+                        if ("string" != typeof e.className) throw new Error("Property `className` must be a string");
+                        if ("function" != typeof e.onShow) throw new Error("Property `onShow` must be a function");
+                        if ("function" != typeof e.onClose) throw new Error("Property `onClose` must be a function");
+                        return e;
+                    }(n)), c = function(e) {
+                        return !1 !== n.onClose(u) && function(e, n) {
+                            return e.classList.remove("basicLightbox--visible"), setTimeout(function() {
+                                return !1 === i(e) || e.parentElement.removeChild(e), n();
+                            }, 410), !0;
+                        }(t, function() {
+                            if ("function" == typeof e) return e(u);
+                        });
+                    };
+                    !0 === n.closable && t.addEventListener("click", function(e) {
+                        e.target === t && c();
+                    });
+                    var u = {
+                        element: function() {
+                            return t;
+                        },
+                        visible: function() {
+                            return i(t);
+                        },
+                        show: function(e) {
+                            return !1 !== n.onShow(u) && function(e, n) {
+                                return document.body.appendChild(e), setTimeout(function() {
+                                    requestAnimationFrame(function() {
+                                        return e.classList.add("basicLightbox--visible"), n();
+                                    });
+                                }, 10), !0;
+                            }(t, function() {
+                                if ("function" == typeof e) return e(u);
+                            });
+                        },
+                        close: c
+                    };
+                    return u;
+                };
+            },
+            {}
+        ]
+    }, {}, [
+        1
+    ])(1);
+});
+
+},{}],"6K7Vw":[function(require,module,exports) {
+
+},{}],"8Mni5":[function(require,module,exports) {
+// Pobranie okna modalnego
+const modal = document.getElementById("modalGoit");
+// Pobranie przycisku, który otwiera okno modalne
+const btn = document.querySelector(".footer-btn"); // Zmiana na pobranie przycisku po klasie
+// Pobranie elementu <span>, który zamyka okno modalne
+const span = document.querySelector(".close-modal-btn-goit"); // Zmienione na querySelector dla spójności
+// Kiedy użytkownik kliknie na przycisk, otwórz okno modalne
+btn.onclick = function() {
+    modal.style.display = "block";
+};
+// Kiedy użytkownik kliknie na <span> (x), zamknij okno modalne
+span.onclick = function() {
+    modal.style.display = "none";
+};
+// Kiedy użytkownik kliknie poza oknem modalnym, zamknij je
+window.onclick = function(event) {
+    if (event.target == modal) modal.style.display = "none";
+};
+// Dodanie obsługi zamknięcia okna modalnego przez naciśnięcie klawisza Esc
+document.onkeydown = function(event) {
+    if (event.key === "Escape") modal.style.display = "none";
+};
+
+},{}],"hLtdZ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "toggleModal", ()=>toggleModal);
+const toggleModal = (modalId)=>{
+    const modal = document.getElementById(modalId);
+    if (modal) modal.style.display = modal.style.display === "block" ? "none" : "block";
+};
+//wydaje mi się że chciałeś zrobić to w ten sposób kwestia wyboru
+//    if (modal) {
+//     modal.style.visibility = modal.style.visibility === 'visible' ? 'hidden' : 'visible';
+//   }
+// };   
+const openModalBtns = document.querySelectorAll(".openModalBtn");
+// dla każdego przycisku otwórz modal
+openModalBtns.forEach((btn)=>{
+    btn.addEventListener("click", ()=>{
+        const modalId = btn.getAttribute("id");
+        toggleModal(modalId);
+    });
+});
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"kxv7b":[function(require,module,exports) {
+var _gallery = require("./gallery");
+const headerNaviElements = document.getElementsByClassName("header-navi");
+const headerBG = document.getElementById("headerBG");
+const homeLink = headerNaviElements[0].getElementsByTagName("a")[0];
+const libraryLink = headerNaviElements[0].getElementsByTagName("a")[1];
+const logIn = headerNaviElements[0].getElementsByTagName("a")[2];
+const logInContainer = document.querySelector(".sign-in-container");
+const registerButton = document.getElementById("register-button");
+const loginButton = document.getElementById("login-button");
+const logoutButton = document.getElementById("logout-button");
+const myLibrary = document.querySelector(".header-library");
+const headerSearch = document.querySelector(".header-search");
+const watchedButton = document.getElementById("watchedHeader");
+const paginationButtons = document.getElementById("pagination-container");
+const logo = document.getElementById("logo");
+const toggleVisibility = (elementToShow, elementToHide)=>{
+    elementToShow.style.visibility = "visible";
+    elementToHide.style.visibility = "hidden";
+    elementToShow.style.display = "flex";
+    elementToHide.style.display = "none";
+};
+const libraryClick = ()=>{
+    watchedHeader.click();
+};
+const setHeaderBackground = ()=>{
+    const screenWidth = window.innerWidth;
+    let backgroundImageUrl = "";
+    if (myLibrary.style.display === "flex") {
+        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-desktop.jpg?raw=true")';
+        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-tablet.jpg?raw=true")';
+        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-mobile.jpg?raw=true")';
+    } else if (headerSearch.style.display === "flex") {
+        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
+        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
+        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
+    } else {
+        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
+        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
+        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
+    }
+    headerBG.style.backgroundImage = backgroundImageUrl;
+};
+setHeaderBackground();
+const homeButtonClick = (event)=>{
+    event.preventDefault();
+    toggleVisibility(headerSearch, myLibrary);
+    homeLink.classList.add("active");
+    libraryLink.classList.remove("active");
+    setHeaderBackground();
+    paginationButtons.style.display = "flex";
+    (0, _gallery.clearGallery)();
+    (0, _gallery.getHomepage)(1);
+};
+const myLibraryButtonClick = (event)=>{
+    event.preventDefault();
+    toggleVisibility(myLibrary, headerSearch);
+    homeLink.classList.remove("active");
+    libraryLink.classList.add("active");
+    setHeaderBackground();
+    paginationButtons.style.display = "none";
+    libraryClick(watchedButton);
+};
+logo.addEventListener("click", homeButtonClick);
+homeLink.addEventListener("click", homeButtonClick);
+libraryLink.addEventListener("click", myLibraryButtonClick);
+logIn.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "block";
+});
+loginButton.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "none";
+});
+registerButton.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "none";
+});
+logoutButton.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "none";
+});
+window.addEventListener("resize", setHeaderBackground);
+if (myLibrary.style.display !== "flex") {
+    const headerLibraryElements = document.querySelectorAll(".header-library");
+    headerLibraryElements.forEach((element)=>{
+        element.style.display = "none";
+    });
+}
+
+},{"./gallery":"bA31f"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
+
+//# sourceMappingURL=index.432a8201.js.map

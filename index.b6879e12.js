@@ -33019,54 +33019,49 @@ const openModal = (movieData)=>{
             const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
             console.log("Trailers:", trailersResponse);
             if (trailersResponse.results && trailersResponse.results.length > 0) {
-                const firstTrailer = trailersResponse.results[0];
-                (0, _trailerModalDefault.default)(firstTrailer.key);
+                // Filtracja zwiastunów, aby wykluczyć reklamy
+                const filteredTrailers = trailersResponse.results.filter((trailer)=>trailer.type === "Trailer");
+                if (filteredTrailers.length > 0) {
+                    // Losowe wybranie zwiastunu spośród dostępnych
+                    const randomIndex = Math.floor(Math.random() * filteredTrailers.length);
+                    (0, _trailerModalDefault.default)(filteredTrailers[randomIndex].key); // Otwieranie modalu z losowym zwiastunem
+                } else console.log("No trailers available");
             } else console.log("No trailers available");
         } catch (error) {
             console.error("Error fetching movie trailers:", error);
         }
     });
-    // // Dodanie event listenera dla kliknięcia na każdy plakat filmu
-    // const moviePosters = document.querySelectorAll('.movie-poster');
-    // moviePosters.forEach(poster => {
-    //   poster.addEventListener('click', async () => {
-    //     try {
-    //       // Pobranie identyfikatora filmu z atrybutu data
-    //       const movieId = poster.getAttribute('data-movie-id');
-    //       // Sprawdzenie, czy identyfikator filmu nie jest pusty
-    //       if (movieId) {
-    //         // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-    //         const trailersResponse = await fetchMovieTrailers(movieId);
-    //         // Wyświetlenie danych zwiastunu w konsoli
-    //         console.log('Trailers:', trailersResponse);
-    //         // Sprawdzenie, czy istnieją zwiastuny
-    //         if (trailersResponse.results && trailersResponse.results.length > 0) {
-    //           // Sprawdzenie, czy istnieje zwiastun o nazwie "Official Trailer"
-    //           const officialTrailer = trailersResponse.results.find(
-    //             trailer => trailer.name === 'Official Trailer',
-    //           );
-    //           if (officialTrailer) {
-    //             // Odtwarzanie zwiastunu "Official Trailer", jeśli istnieje
-    //             window.open(`https://www.youtube.com/watch?v=${officialTrailer.key}`, '_blank');
-    //           } else {
-    //             // Odtwarzanie losowego zwiastunu z listy, jeśli nie ma "Official Trailer"
-    //             const randomTrailer =
-    //               trailersResponse.results[
-    //                 Math.floor(Math.random() * trailersResponse.results.length)
-    //               ];
-    //             window.open(`https://www.youtube.com/watch?v=${randomTrailer.key}`, '_blank');
-    //           }
-    //         } else {
-    //           console.log('No trailers available');
-    //         }
-    //       } else {
-    //         console.error('Movie ID is missing'); // Komunikat o błędzie, gdy identyfikator filmu jest pusty
-    //       }
-    //     } catch (error) {
-    //       console.error('Error fetching movie trailers:', error);
-    //     }
-    //   });
-    // });
+    // Dodanie event listenera dla kliknięcia na każdy plakat filmu
+    const moviePosters = document.querySelectorAll(".movie-poster");
+    moviePosters.forEach((poster)=>{
+        poster.addEventListener("click", async ()=>{
+            try {
+                // Pobranie identyfikatora filmu z atrybutu data
+                const movieId = poster.getAttribute("data-movie-id");
+                // Sprawdzenie, czy identyfikator filmu nie jest pusty
+                if (movieId) {
+                    // Wysłanie żądania do API w celu pobrania zwiastunu filmu
+                    const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
+                    // Wyświetlenie danych zwiastunu w konsoli
+                    console.log("Trailers:", trailersResponse);
+                    // Sprawdzenie, czy istnieją zwiastuny
+                    if (trailersResponse.results && trailersResponse.results.length > 0) {
+                        // Sprawdzenie, czy istnieje zwiastun o nazwie "Official Trailer"
+                        const officialTrailer = trailersResponse.results.find((trailer)=>trailer.name === "Official Trailer");
+                        if (officialTrailer) // Odtwarzanie zwiastunu "Official Trailer", jeśli istnieje
+                        window.open(`https://www.youtube.com/watch?v=${officialTrailer.key}`, "_blank");
+                        else {
+                            // Odtwarzanie losowego zwiastunu z listy, jeśli nie ma "Official Trailer"
+                            const randomTrailer = trailersResponse.results[Math.floor(Math.random() * trailersResponse.results.length)];
+                            window.open(`https://www.youtube.com/watch?v=${randomTrailer.key}`, "_blank");
+                        }
+                    } else console.log("No trailers available");
+                } else console.error("Movie ID is missing"); // Komunikat o błędzie, gdy identyfikator filmu jest pusty
+            } catch (error) {
+                console.error("Error fetching movie trailers:", error);
+            }
+        });
+    });
     const closeButton = document.querySelector(".close");
     closeButton.onclick = ()=>{
         modal.style.display = "none";
@@ -33078,6 +33073,11 @@ const openModal = (movieData)=>{
     window.onclick = (event)=>{
         if (event.target == modal) modal.style.display = "none";
     };
+    // Dodajemy klasę w zależności od szerokości urządzenia
+    const modalContainer = document.querySelector(".modal-container");
+    if (window.innerWidth >= 1024) modalContainer.classList.add("desktop-modal");
+    else if (window.innerWidth >= 640) modalContainer.classList.add("tablet-modal");
+    else modalContainer.classList.add("mobile-modal");
 }; // // Funkcja zamykająca modal z odtwarzaczem filmów
  // const closeModal = () => {
  //   const trailerModal = document.querySelector('.trailer-modal');
@@ -33090,6 +33090,28 @@ const openModal = (movieData)=>{
  // };
 
 },{"./api":"5mmx6","./localstorage":"ippo7","./trailerModal":"kiEfO","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"kiEfO":[function(require,module,exports) {
+// import * as basicLightbox from 'basiclightbox';
+// // Funkcja otwierająca okno modalne z odtwarzaczem filmów
+// export default function openTrailerModal(trailerKey) {
+//   const srcTrailer = 'https://www.youtube.com/embed/';
+//   const iframeSrc = srcTrailer + trailerKey;
+//   const modal = basicLightbox.create(`
+//     <iframe class="iframe-container" width="900" height="600" src="${iframeSrc}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+//     <button class="close-modal__trailer"></button>
+//   `);
+//   const closeModalHandler = event => {
+//     if (event.code === 'Escape') {
+//       modal.close();
+//     }
+//     window.removeEventListener('keydown', closeModalHandler);
+//   };
+//   modal.show();
+//   const closeBtn = modal.element().querySelector('.close-modal__trailer');
+//   closeBtn.addEventListener('click', () => {
+//     modal.close();
+//   });
+//   window.addEventListener('keydown', closeModalHandler);
+// }
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>openTrailerModal);
@@ -33098,11 +33120,15 @@ function openTrailerModal(trailerKey) {
     const srcTrailer = "https://www.youtube.com/embed/";
     const iframeSrc = srcTrailer + trailerKey;
     const modal = _basiclightbox.create(`
-    <iframe class="iframe-container" width="900" height="600" src="${iframeSrc}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <button class="close-modal__trailer"></button>
+    <div class="trailer-modal-overlay">
+        <div class="trailer-modal-content">
+            <iframe class="iframe-container" src="${iframeSrc}" title="YouTube video player" width="1280px" height="720px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <button class="close-modal__trailer">&times;</button>
+        </div>
+    </div>
   `);
-    const closeModalHandler = (event)=>{
-        if (event.code === "Escape") modal.close();
+    const closeModalHandler = (e)=>{
+        if (e.code === "Escape") modal.close();
         window.removeEventListener("keydown", closeModalHandler);
     };
     modal.show();
@@ -33358,4 +33384,4 @@ if (myLibrary.style.display !== "flex") {
 
 },{"./gallery":"bA31f"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
 
-//# sourceMappingURL=index.221e9161.js.map
+//# sourceMappingURL=index.b6879e12.js.map

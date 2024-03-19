@@ -147,22 +147,20 @@
 var _mainScss = require("./sass/main.scss");
 //JS Global
 var _api = require("./js/api");
-//import './js/search';
-var _darkMode = require("./js/darkMode");
-var _devTools = require("./js/devTools");
+var _darkMode = require("./js/dark-mode");
+var _devTools = require("./js/dev-tools");
 var _firebaseAuthorization = require("./js/firebaseAuthorization");
 var _gallery = require("./js/gallery");
+// import './js/gallery-ML';
+var _header = require("./js/header");
 var _localstorage = require("./js/localstorage");
-var _markup = require("./js/markup");
-// import './js/modal';
 var _modalGoitTeam = require("./js/modal-goit-team");
-var _onOffModal = require("./js/onOffModal");
+var _modalMovie = require("./js/modal-movie");
 var _openModal = require("./js/openModal");
 var _renderGallery = require("./js/renderGallery");
 var _trailerModal = require("./js/trailerModal");
-var _visibilityHeader = require("./js/visibilityHeader");
 
-},{"./sass/main.scss":"clpGj","./js/api":"5mmx6","./js/darkMode":"3DurW","./js/devTools":"kw7nM","./js/firebaseAuthorization":"fukWk","./js/gallery":"bA31f","./js/localstorage":"ippo7","./js/markup":"6K7Vw","./js/modal-goit-team":"8Mni5","./js/onOffModal":"hLtdZ","./js/openModal":"72exX","./js/renderGallery":"3VUnj","./js/trailerModal":"kiEfO","./js/visibilityHeader":"kxv7b"}],"clpGj":[function() {},{}],"5mmx6":[function(require,module,exports) {
+},{"./sass/main.scss":"clpGj","./js/api":"5mmx6","./js/dark-mode":"b3aTn","./js/dev-tools":"wmltl","./js/firebaseAuthorization":"fukWk","./js/gallery":"bA31f","./js/header":"hMCGa","./js/localstorage":"ippo7","./js/modal-goit-team":"8Mni5","./js/modal-movie":"gpXqf","./js/openModal":"72exX","./js/renderGallery":"3VUnj","./js/trailerModal":"kiEfO"}],"clpGj":[function() {},{}],"5mmx6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 // Genres
@@ -184,7 +182,7 @@ parcelHelpers.export(exports, "genresName", ()=>genresName);
 var _axios = require("axios");
 var _axiosDefault = parcelHelpers.interopDefault(_axios);
 const BASE_URL = "https://api.themoviedb.org/3/";
-const API_KEY = "2c31d985c0705d4cec824ff15c12500a";
+const API_KEY = "c94d8e5ef8b4fe69956b21ebd01a6f37";
 const AUTHORIZATION = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYzMxZDk4NWMwNzA1ZDRjZWM4MjRmZjE1YzEyNTAwYSIsInN1YiI6IjY1ZTg0MWVjM2ZlMTYwMDE2MjVjZTAzZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.5HPQhM5yRj3vRPDY3tSFgGEmeCi69HNN3M4_g94gH5c";
 let options = {
     headers: {
@@ -4761,7 +4759,7 @@ Object.entries(HttpStatusCode).forEach(([key, value])=>{
 });
 exports.default = HttpStatusCode;
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"3DurW":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"b3aTn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "changeMode", ()=>changeMode);
@@ -4774,62 +4772,26 @@ const changeMode = ()=>{
     };
     visualBtn.addEventListener("click", handleDarkMode);
 };
+// obsługa przełączania wyglądu strony pomiędzy trybem jasny/ciemny
 window.addEventListener("DOMContentLoaded", ()=>{
     changeMode();
 });
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"kw7nM":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"wmltl":[function(require,module,exports) {
 const devMainButton = document.getElementById("dev-mainButton");
 const devButtonBar = document.querySelector(".dev-button-bar");
 const scrollToTop = document.getElementById("scrollToTop");
 const scrollToTopButton = document.getElementById("scrollToTopButton");
 const wideContainer = document.getElementById("wide-container");
 const galleryContainer = document.getElementById("gallery-container");
-// let isButtonBarVisible = false;
-// devMainButton.addEventListener('click', () => {
-//     if (isButtonBarVisible) {
-//         devButtonBar.style.display = "none"
-//     } else {
-//         devButtonBar.style.display = "flex"
-//     }
-// });
-// devMainButton.addEventListener('mouseenter', () => {
-//     devButtonBar.style.display = "flex";
-//     devButtonBar.style.opacity = "1";
-// });
-// devButtonBar.addEventListener('mouseleave', () => {
-//      devButtonBar.style.display = "none"
-// })
-//wersja druga a pojawiającą sie animacją
-// gsap.set(devButtonBar, { display: "none", opacity: 0 });
-// let isButtonBarVisible = false;
-// devMainButton.addEventListener('click', () => {
-//   isButtonBarVisible = !isButtonBarVisible;
-//   if (isButtonBarVisible) {
-//     gsap.to(devButtonBar, { display: "flex", opacity: 1, duration: 0.3, ease: 'power2.out' });
-//   } else {
-//     gsap.to(devButtonBar, { opacity: 0, duration: 0.3, ease: 'power2.out', onComplete: () => {
-//       devButtonBar.style.display = "none";
-//     } });
-//   }
-// });
-// devMainButton.addEventListener('mouseenter', () => {
-//   gsap.to(devButtonBar, { display: "flex", opacity: 1, duration: 0.3, ease: 'power2.out' });
-// });
-// devButtonBar.addEventListener('mouseleave', () => {
-//   if (!isButtonBarVisible) {
-//     gsap.to(devButtonBar, { opacity: 0, duration: 0.3, ease: 'power2.out', onComplete: () => {
-//       devButtonBar.style.display = "none";
-//     } });
-//   }
-// });
-//wersja trzecia w wysuwającą sie animacją z lewej do prawej
+//wersja trzecia z wysuwającą sie animacją z lewej do prawej
 gsap.set(devButtonBar, {
     display: "none",
     opacity: 0,
     x: "-100%"
 });
 let isButtonBarVisible = false;
+// obsługa zdarzenia kliknięcia w główny przycisk narzędzi deweloperskich
 devMainButton.addEventListener("click", ()=>{
     isButtonBarVisible = !isButtonBarVisible;
     if (isButtonBarVisible) gsap.to(devButtonBar, {
@@ -4849,6 +4811,7 @@ devMainButton.addEventListener("click", ()=>{
         }
     });
 });
+// obsługa zdarzenia umieszczenia kursora myszy nad głównym przyciskiem narzędzi deweloperskich
 devMainButton.addEventListener("mouseenter", ()=>{
     gsap.to(devButtonBar, {
         display: "flex",
@@ -4858,6 +4821,7 @@ devMainButton.addEventListener("mouseenter", ()=>{
         ease: "power2.out"
     });
 });
+// obsługa zdarzenia oddalenia kursora myszy znad głównego przycisku narzędzi deweloperskich
 devButtonBar.addEventListener("mouseleave", ()=>{
     if (!isButtonBarVisible) gsap.to(devButtonBar, {
         opacity: 0,
@@ -4870,16 +4834,57 @@ devButtonBar.addEventListener("mouseleave", ()=>{
     });
 });
 let isButtonVisible = true;
+// obsługa zdarzenia kliknięcia na przycisk włączający/wyłączający dodatkowy przycisk przewijania do góry
 scrollToTop.addEventListener("click", ()=>{
     if (!isButtonVisible) scrollToTopButton.style.visibility = "hidden";
     else scrollToTopButton.style.visibility = "visible";
     isButtonVisible = !isButtonVisible;
 });
+// obsługa kliknięcia na przycisk włączający/wyłączający obsługę szerokiego ekranu
 const toggleMonitorClass = ()=>{
     if (galleryContainer.classList.contains("monitor-wide")) galleryContainer.classList.remove("monitor-wide");
     else galleryContainer.classList.add("monitor-wide");
 };
-wideContainer.addEventListener("click", toggleMonitorClass);
+// obsługa zdarzenia kliknięcia na przycisk włączający/wyłączający obsługę szerokiego ekranu
+wideContainer.addEventListener("click", toggleMonitorClass); //wersja pierwsza z pojawiającą sie animacją
+ // let isButtonBarVisible = false;
+ // devMainButton.addEventListener('click', () => {
+ //     if (isButtonBarVisible) {
+ //         devButtonBar.style.display = "none"
+ //     } else {
+ //         devButtonBar.style.display = "flex"
+ //     }
+ // });
+ // devMainButton.addEventListener('mouseenter', () => {
+ //     devButtonBar.style.display = "flex";
+ //     devButtonBar.style.opacity = "1";
+ // });
+ // devButtonBar.addEventListener('mouseleave', () => {
+ //      devButtonBar.style.display = "none"
+ // })
+ //wersja druga z pojawiającą sie animacją
+ // gsap.set(devButtonBar, { display: "none", opacity: 0 });
+ // let isButtonBarVisible = false;
+ // devMainButton.addEventListener('click', () => {
+ //   isButtonBarVisible = !isButtonBarVisible;
+ //   if (isButtonBarVisible) {
+ //     gsap.to(devButtonBar, { display: "flex", opacity: 1, duration: 0.3, ease: 'power2.out' });
+ //   } else {
+ //     gsap.to(devButtonBar, { opacity: 0, duration: 0.3, ease: 'power2.out', onComplete: () => {
+ //       devButtonBar.style.display = "none";
+ //     } });
+ //   }
+ // });
+ // devMainButton.addEventListener('mouseenter', () => {
+ //   gsap.to(devButtonBar, { display: "flex", opacity: 1, duration: 0.3, ease: 'power2.out' });
+ // });
+ // devButtonBar.addEventListener('mouseleave', () => {
+ //   if (!isButtonBarVisible) {
+ //     gsap.to(devButtonBar, { opacity: 0, duration: 0.3, ease: 'power2.out', onComplete: () => {
+ //       devButtonBar.style.display = "none";
+ //     } });
+ //   }
+ // });
 
 },{}],"fukWk":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -31900,19 +31905,37 @@ RepoInfo;
 
 },{"6b38617303e2f7b9":"lV6sG","@firebase/app":"hMa0D","@firebase/component":"j0Bab","@firebase/util":"fNJf0","@firebase/logger":"5Ik4t","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"bA31f":[function(require,module,exports) {
 // gallery.js
+// import {
+//   fetchMovieDetails,
+//   fetchMovieTrailers,
+//   fetchSearchMovies,
+//   fetchTrendingMovies,
+//   genresName,
+// } from './api';
+// import { addToQueue, addToWatchedMovies } from './localstorage';
+// import { createPagination, setCurrentPage } from './pagination';
+// export let homePageNo = 0;
+// export let searPageNo = 1;
+// let isInfinityScrollActive = 0;
+// let isInfinityScrollEnable = 0;
+// let searchQuery;
+// let totalPages;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "homePageNo", ()=>homePageNo);
+parcelHelpers.export(exports, "searPageNo", ()=>searPageNo);
 parcelHelpers.export(exports, "getGenres", ()=>getGenres);
 parcelHelpers.export(exports, "getHomepage", ()=>getHomepage);
 parcelHelpers.export(exports, "getSearchResult", ()=>getSearchResult);
+parcelHelpers.export(exports, "getSearchResult2", ()=>getSearchResult2);
 parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
 var _api = require("./api");
-// import { createPagination, setCurrentPage } from './pagination';
-// import { createPagination, currentPage, setCurrentPage } from './pagination';
 var _pagination = require("./pagination");
-var _renderGallery = require("./renderGallery"); // Dodano import funkcji związanych z galerią
 let homePageNo = 0;
+let searPageNo = 1;
+let isInfinityScrollActive = 0;
+let isInfinityScrollEnable = 0;
+let searchQuery;
 let totalPages;
 const getGenres = (genreIds)=>{
     // Pobranie nazw gatunków z listy genresName zdefiniowanej w api.js
@@ -31935,8 +31958,9 @@ const displayWatchedMovies = ()=>{
             };
         });
         homePageNo = 0;
-        (0, _renderGallery.clearGallery)();
-        (0, _renderGallery.renderGallery)(moviesWithGenres, 1);
+        clearGallery();
+        isInfinityScrollActive = 0;
+        renderGallery(moviesWithGenres, 1);
     } catch (error) {
         console.error("Error displaying watched movies:", error);
     }
@@ -31953,11 +31977,16 @@ const displayQueuedMovies = ()=>{
             };
         });
         homePageNo = 0;
-        (0, _renderGallery.clearGallery)();
-        (0, _renderGallery.renderGallery)(moviesWithGenres, 1);
+        clearGallery();
+        isInfinityScrollActive = 0;
+        renderGallery(moviesWithGenres, 1);
     } catch (error) {
         console.error("Error displaying queued movies:", error);
     }
+};
+const displayMovieDetails = (movieDetails)=>{
+// Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
+// console.log(movieDetails);
 };
 //Obsługa HomePage i Buttonów
 window.addEventListener("DOMContentLoaded", ()=>{
@@ -31971,15 +32000,17 @@ window.addEventListener("DOMContentLoaded", ()=>{
 // const libraryQueuedButton = document.getElementById('queueModal');
 // libraryQueuedButton.addEventListener('click', displayQueuedMovies);
 });
-const getHomepage = async (pageNo)=>{
+const getHomepage = async (pageNo, infinity)=>{
     try {
         const response = await (0, _api.fetchTrendingMovies)(pageNo);
-        (0, _renderGallery.clearGallery)();
-        (0, _renderGallery.renderGallery)(response.results, 0);
+        if (!infinity) clearGallery();
         homePageNo = pageNo;
+        (0, _pagination.setCurrentPage)(pageNo);
+        isInfinityScrollActive = 1;
+        renderGallery(response.results, 0);
         (0, _pagination.createPagination)(response.total_pages);
     } catch (error) {
-        console.error("Error fetching trending movies:", error);
+    // console.error('Error fetching trending movies:', error);
     }
 };
 //Obsługa szukajki
@@ -31997,25 +32028,132 @@ const getSearchResult = async (event, pageNo)=>{
     homePageNo = pageNo;
     const searchInput = document.querySelector(".search-form input");
     const notResult = document.getElementById("not-result");
-    const searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
+    searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
     if (searchQuery) try {
         const response = await (0, _api.fetchSearchMovies)(searchQuery, homePageNo);
         totalPages = response.total_pages;
         movies = response.results;
         (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
-        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
+        searchInput.value = ""; //searchInput.value = ''; // Wyczyszczenie pola wyszukiwania
         if (response.results.length > 0) {
             notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
-            (0, _renderGallery.clearGallery)();
-            (0, _renderGallery.renderGallery)(movies);
+            clearGallery();
+            isInfinityScrollActive = 2;
+            searPageNo = 2;
+            renderGallery(movies);
         } else {
             notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
-            (0, _renderGallery.clearGallery)(); // Wyczyszczenie galerii
+            clearGallery(); // Wyczyszczenie galerii
         }
     } catch (error) {
         console.error("Error fetching search movies:", error);
     }
 };
+const getSearchResult2 = async (searchQuery, searPageNo)=>{
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
+    if (searchQuery) try {
+        const response = await (0, _api.fetchSearchMovies)(searchQuery, searPageNo);
+        totalPages = response.total_pages;
+        movies = response.results;
+        if (response.results.length > 0) {
+            notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
+            renderGallery(movies);
+        } else {
+            notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
+            clearGallery(); // Wyczyszczenie galerii
+        }
+    } catch (error) {
+        console.error("Error fetching search movies:", error);
+    }
+};
+// // Renderowanie Galerii
+// const renderGallery = (dataGallery, rating) => {
+//   try {
+//     // Pobranie danych o filmach z galerii
+//     const movies = dataGallery;
+//     // Znalezienie kontenera dla galerii filmów
+//     const galleryContainer = document.getElementById('gallery-container');
+//     // Ukrycie komunikatu o braku wyników na start
+//     const notResult = document.getElementById('not-result');
+//     notResult.style.display = 'none';
+//     // Sprawdzenie czy lista filmów nie jest pusta
+//     if (movies.length > 0) {
+//       // Pobranie danych o najbardziej popularnych filmach
+//       const newContent = movies
+//         .map(movie => {
+//           let posterPath;
+//           if (movie.poster_path) {
+//             posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+//           } else {
+//             posterPath =
+//               'https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.jpg?raw=true';
+//           }
+//           // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
+//           let categories = 'Without category';
+//           // Ustalenie roku wydania filmu
+//           let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : 'Without date';
+//           // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
+//           if (movie.genres && movie.genres.length > 0) {
+//             categories = movie.genres.map(genre => genre.name).join(', ');
+//           } else if (movie.genre_ids && movie.genre_ids.length > 0) {
+//             categories = getGenres(movie.genre_ids);
+//             if (!categories) {
+//               categories = 'Without category';
+//             }
+//           }
+//           // console.log('rating: ', rating);
+//           let rate = rating
+//             ? ` <span class="average-vote">${movie.vote_average.toFixed(1)}</span>`
+//             : ``;
+//           // Zbudowanie kodu HTML dla karty filmu
+//           const movieCard = `
+//           <div class="movie-card" data-movie-id="${movie.id}">
+//           <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
+//           <div class="movie-details">
+//           <p class="movie-title">${movie.title}</p>
+//           <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
+//           </div>
+//           </div>
+//         `;
+//           return movieCard;
+//         })
+//         .join('');
+//       //galleryContainer.innerHTML = newContent;
+//       galleryContainer.insertAdjacentHTML('beforeend', newContent);
+//       // Wstawienie wygenerowanego kodu HTML do kontenera galerii
+//       //galleryContainer.innerHTML = newContent;
+//       // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
+//       notResult.style.display = 'none';
+//     } else {
+//       // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
+//       //galleryContainer.innerHTML = '';
+//       notResult.style.display = 'block';
+//       // Wyczyszczenie galerii
+//       clearGallery();
+//     }
+//     // Obsługa zdarzenia kliknięcia dla każdej karty filmu
+//     const movieCards = document.querySelectorAll('.movie-card');
+//     movieCards.forEach(card => {
+//       card.addEventListener('click', async () => {
+//         const movieId = card.dataset.movieId;
+//         // Pobranie szczegółowych informacji o wybranym filmie
+//         const movieDetails = await fetchMovieDetails(movieId);
+//         // Otwarcie modalu z informacjami o filmie
+//         openModal(movieDetails);
+//         // Wyświetlenie dodatkowych informacji o filmie
+//         displayMovieDetails(movieDetails);
+//       });
+//     });
+//   } catch (error) {
+//     // Obsługa błędu w przypadku problemów z renderowaniem galerii
+//     console.error('Error rendering gallery:', error);
+//     // Wyświetlenie komunikatu o braku wyników w przypadku błędu
+//     const notResult = document.getElementById('not-result');
+//     notResult.style.display = 'block';
+//   }
+// };
 // Ukrycie komunikatu o braku wyników na start
 document.addEventListener("DOMContentLoaded", ()=>{
     const notResult = document.getElementById("not-result");
@@ -32026,19 +32164,24 @@ const clearGallery = ()=>{
     galleryContainer.innerHTML = ""; // Wyczyszczenie zawartości galerii
 };
 // // Funkcja openModal
-// export const openModal = movieData => {
+// const openModal = movieData => {
 //   const modal = document.getElementById('myModal');
 //   modal.style.display = 'block';
 //   const modalContent = document.getElementById('modalContent');
+//   let posterPath;
+//   if (movieData.poster_path) {
+//     posterPath = `https://image.tmdb.org/t/p/w500${movieData.poster_path}`;
+//   } else {
+//     posterPath =
+//       'https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.jpg?raw=true';
+//   }
 //   modalContent.innerHTML = `
 //   <div class="modal-container">
 //     <div class="movie-poster-modal">
-//       <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${
-//         movieData.poster_path
-//       }" alt="${movieData.title} Photo">
+//       <img class="movie-poster" src="${posterPath}" alt="${movieData.title} Photo">
 //     </div>
 //     <div class="modal-movie-info">
-//       <h2>${movieData.title}</h2>
+//       <div class="modal-movie-title"><h2>${movieData.title}</h2></div>
 //       <div class="info-item">
 //         <div class="pernament-item">
 //           <p>Vote / Votes </p>
@@ -32049,7 +32192,9 @@ const clearGallery = ()=>{
 //         <div class="variables-item">
 //           <p><span class="average-vote">${movieData.vote_average.toFixed(
 //             1,
-//           )} </span>/ <span class="count-vote">${movieData.vote_count}</span></p>
+//           )} </span><span class="slash-color">/ </span><span class="count-vote">${
+//     movieData.vote_count
+//   }</span></p>
 //             <p>${movieData.popularity}</p>
 //             <p>${movieData.original_title}</p>
 //             <p>${movieData.genres.map(genre => genre.name).join(', ')}</p>
@@ -32061,7 +32206,9 @@ const clearGallery = ()=>{
 //       <div class="modal-buttons">
 //         <button class="watchedButton">Add to Watched</button>
 //         <button class="queuedButton">Add to Queue</button>
-//         <button id="movieTrailerButton">Trailer</button>
+//       </div>
+//       <div class="movie-trailer">
+//       <button id="movieTrailerButton">Trailer</button>
 //       </div>
 //     </div>
 //   </div>
@@ -32083,7 +32230,7 @@ const clearGallery = ()=>{
 //       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
 //       const trailersResponse = await fetchMovieTrailers(movieId);
 //       // Wyświetlenie danych zwiastunu w konsoli
-//       console.log('Trailers:', trailersResponse);
+//       // console.log('Trailers:', trailersResponse);
 //       // Sprawdzenie, czy istnieją zwiastuny
 //       if (trailersResponse.results && trailersResponse.results.length > 0) {
 //         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
@@ -32143,30 +32290,30 @@ const loadMoreContent = ()=>{
     const threshold = 800; // w pikselach
     // Sprawdzamy, czy element jest blisko dolnej krawędzi okna przeglądarki
     if (isNearBottom(contentContainer, threshold)) {
-        // Jeśli tak, ładujemy więcej treści
-        if (homePageNo > 0) homePageNo++;
-        getHomepage(homePageNo);
+        // Jeśli tak, ładujemy więcej treści z Home Page
+        if (homePageNo >= 1 && isInfinityScrollActive == 1 && isInfinityScrollEnable == 1) {
+            homePageNo++;
+            getHomepage(homePageNo, true);
+        }
+        // Jeśli tak, ładujemy więcej treści z Search
+        if (homePageNo >= 1 && isInfinityScrollActive == 2 && isInfinityScrollEnable == 1) getSearchResult2(searchQuery, searPageNo++);
     }
 };
 const infinityScroll = document.getElementById("infinityScroll");
-let isInfinityScrollActive = false;
 // Obsługa zdarzenia kliknięcia przycisku
 infinityScroll.addEventListener("click", ()=>{
-    if (isInfinityScrollActive) // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
-    window.removeEventListener("scroll", loadMoreContent);
-    else // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
-    window.addEventListener("scroll", loadMoreContent);
-    // Zmiana stanu - włącz/wyłącz
-    isInfinityScrollActive = !isInfinityScrollActive;
-    // Początkowe ładowanie treści
-    getHomepage(homePageNo);
-    // Event scroll na oknie przeglądarki po kliknięciu przycisku
-    window.addEventListener("scroll", loadMoreContent);
-    // Usuń obsługę zdarzenia kliknięcia przycisku, aby nie powtarzać ładowania po kliknięciu
-    infinityScroll.removeEventListener("click", loadMoreContent);
+    if (isInfinityScrollEnable) {
+        // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
+        window.removeEventListener("scroll", loadMoreContent);
+        isInfinityScrollEnable = 0;
+    } else {
+        // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
+        window.addEventListener("scroll", loadMoreContent);
+        isInfinityScrollEnable = 1;
+    }
 });
 
-},{"./api":"5mmx6","./pagination":"iC8Tx","./renderGallery":"3VUnj","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"iC8Tx":[function(require,module,exports) {
+},{"./api":"5mmx6","./pagination":"iC8Tx","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"iC8Tx":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "currentPage", ()=>currentPage);
@@ -32174,7 +32321,7 @@ parcelHelpers.export(exports, "itemsPerPage", ()=>itemsPerPage);
 parcelHelpers.export(exports, "setCurrentPage", ()=>setCurrentPage);
 parcelHelpers.export(exports, "updatePageView", ()=>updatePageView);
 parcelHelpers.export(exports, "createPagination", ()=>createPagination);
-var _gallerySaveOld = require("./gallery-save-old");
+var _gallery = require("./gallery");
 let currentPage = 1;
 const itemsPerPage = 20;
 const setCurrentPage = (value)=>{
@@ -32235,17 +32382,29 @@ const createPagination = (totalPages)=>{
             paginationPages.appendChild(lastPageButton);
         }
     }
-    if (currentPage === 1) document.querySelector("#icon-arrow-left2").classList.add("hidden");
-    else document.querySelector("#icon-arrow-left2").classList.remove("hidden");
-    if (currentPage == totalPages) document.querySelector("#icon-arrow-right2").classList.add("hidden");
-    else document.querySelector("#icon-arrow-right2").classList.remove("hidden");
+    if (currentPage === 1) {
+        document.querySelector("#icon-arrow-left2").classList.add("hidden");
+        document.querySelector(".arrow-left").classList.add("hidden");
+    } else {
+        document.querySelector("#icon-arrow-left2").classList.remove("hidden");
+        document.querySelector(".arrow-left").classList.remove("hidden");
+    }
+    if (currentPage == totalPages) {
+        document.querySelector("#icon-arrow-right2").classList.add("hidden");
+        document.querySelector(".arrow-right").classList.add("hidden");
+    } else {
+        document.querySelector("#icon-arrow-right2").classList.remove("hidden");
+        document.querySelector(".arrow-right").classList.remove("hidden");
+    }
     updatePageView(currentPage);
 };
+// ładowanie strony o podanym nummerze
 const loadPage = (e, currentPage)=>{
     const searchInput = document.querySelector(".search-form input");
-    if (searchInput.value !== "") (0, _gallerySaveOld.getSearchResult)(e, currentPage);
-    else (0, _gallerySaveOld.getHomepage)(currentPage);
+    if (searchInput.value !== "") (0, _gallery.getSearchResult)(e, currentPage); // ładowanie podanej strony z szukanymi filmami
+    else (0, _gallery.getHomepage)(currentPage); // ładowanie podanej strony z popularnymi filmami
 };
+// obsługa zdarzenia kliknięcia w przyciski paginacji
 document.querySelector("#pagination-container").addEventListener("click", (e)=>{
     e.preventDefault();
     if (e.target.tagName == "BUTTON") {
@@ -32262,645 +32421,203 @@ document.querySelector("#pagination-container").addEventListener("click", (e)=>{
     }
 });
 
-},{"./gallery-save-old":"iVkPG","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"iVkPG":[function(require,module,exports) {
-// gallery.js
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "homePageNo", ()=>homePageNo);
-parcelHelpers.export(exports, "getGenres", ()=>getGenres);
-parcelHelpers.export(exports, "getHomepage", ()=>getHomepage);
-parcelHelpers.export(exports, "getSearchResult", ()=>getSearchResult);
-parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
-var _api = require("./api");
-var _localstorage = require("./localstorage");
-var _pagination = require("./pagination");
-let homePageNo = 0;
-let totalPages;
-const getGenres = (genreIds)=>{
-    // Pobranie nazw gatunków z listy genresName zdefiniowanej w api.js
-    const genres = genreIds.map((genreId)=>{
-        const foundGenre = (0, _api.genresName).find((genre)=>genre.id === genreId);
-        return foundGenre ? foundGenre.name : "";
-    });
-    // Zwrócenie połączonej listy gatunków
-    return genres.join(", ");
+},{"./gallery":"bA31f","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"hMCGa":[function(require,module,exports) {
+var _gallery = require("./gallery");
+const headerNaviElements = document.getElementsByClassName("header-navi");
+const headerBG = document.getElementById("headerBG");
+const homeLink = headerNaviElements[0].getElementsByTagName("a")[0];
+const libraryLink = headerNaviElements[0].getElementsByTagName("a")[1];
+const logIn = headerNaviElements[0].getElementsByTagName("a")[2];
+const logInContainer = document.querySelector(".sign-in-container");
+const registerButton = document.getElementById("register-button");
+const loginButton = document.getElementById("login-button");
+const logoutButton = document.getElementById("logout-button");
+const myLibrary = document.querySelector(".header-library");
+const headerSearch = document.querySelector(".header-search");
+const watchedButton = document.getElementById("watchedHeader");
+const paginationButtons = document.getElementById("pagination-container");
+const logo = document.getElementById("logo");
+// przełączanie widoczności podanych elementów
+const toggleVisibility = (elementToShow, elementToHide)=>{
+    elementToShow.style.visibility = "visible";
+    elementToHide.style.visibility = "hidden";
+    elementToShow.style.display = "flex";
+    elementToHide.style.display = "none";
 };
-const displayWatchedMovies = ()=>{
-    try {
-        const watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
-        const moviesWithGenres = watchedMovies.map((movie)=>{
-            let categories = "Without category";
-            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
-            return {
-                ...movie,
-                categories
-            };
-        });
-        homePageNo = 0;
-        clearGallery();
-        renderGallery(moviesWithGenres, 1);
-    } catch (error) {
-        console.error("Error displaying watched movies:", error);
+// wybór tła nagłówka w zależności od rozdzielczości i wybranej strony głównej lub 'my library'
+const setHeaderBackground = ()=>{
+    const screenWidth = window.innerWidth;
+    let backgroundImageUrl = "";
+    if (myLibrary.style.display === "flex") {
+        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-desktop.jpg?raw=true")';
+        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-tablet.jpg?raw=true")';
+        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-mobile.jpg?raw=true")';
+    } else if (headerSearch.style.display === "flex") {
+        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
+        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
+        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
+    } else {
+        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
+        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
+        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
     }
+    headerBG.style.backgroundImage = backgroundImageUrl;
 };
-const displayQueuedMovies = ()=>{
-    try {
-        const queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
-        const moviesWithGenres = queuedMovies.map((movie)=>{
-            let categories = "Without category";
-            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
-            return {
-                ...movie,
-                categories
-            };
-        });
-        homePageNo = 0;
-        clearGallery();
-        renderGallery(moviesWithGenres, 1);
-    } catch (error) {
-        console.error("Error displaying queued movies:", error);
-    }
-};
-const displayMovieDetails = (movieDetails)=>{
-    // Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
-    console.log(movieDetails);
-};
-//Obsługa HomePage i Buttonów
-window.addEventListener("DOMContentLoaded", ()=>{
-    getHomepage(1); // Wywołujemy funkcję wyświetlającą HomePage
-    const libraryWatched = document.getElementById("watchedHeader");
-    libraryWatched.addEventListener("click", displayWatchedMovies);
-    const libraryQueued = document.getElementById("queueHeader");
-    libraryQueued.addEventListener("click", displayQueuedMovies);
-// const libraryWatchedButton = document.getElementById('watchedModal');
-// libraryWatchedButton.addEventListener('click', displayWatchedMovies);
-// const libraryQueuedButton = document.getElementById('queueModal');
-// libraryQueuedButton.addEventListener('click', displayQueuedMovies);
-});
-const getHomepage = async (pageNo)=>{
-    try {
-        const response = await (0, _api.fetchTrendingMovies)(pageNo);
-        clearGallery();
-        renderGallery(response.results, 0);
-        homePageNo = pageNo;
-        (0, _pagination.createPagination)(response.total_pages);
-    } catch (error) {
-        console.error("Error fetching trending movies:", error);
-    }
-};
-//Obsługa szukajki
-document.addEventListener("DOMContentLoaded", ()=>{
-    const searchForm = document.getElementById("search-form");
-    const searchInput = document.querySelector(".search-form input");
-    const notResult = document.getElementById("not-result");
-    searchForm.addEventListener("submit", async (event)=>{
-        (0, _pagination.setCurrentPage)(1);
-        getSearchResult(event, 1);
-    });
-});
-const getSearchResult = async (event, pageNo)=>{
+// wywołanie funkcji wyboru tła nagłówka
+setHeaderBackground();
+// obsługa kliknięcia w 'logo lub 'home'
+const homeButtonClick = (event)=>{
     event.preventDefault();
-    homePageNo = pageNo;
-    const searchInput = document.querySelector(".search-form input");
-    const notResult = document.getElementById("not-result");
-    const searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
-    if (searchQuery) try {
-        const response = await (0, _api.fetchSearchMovies)(searchQuery, homePageNo);
-        totalPages = response.total_pages;
-        movies = response.results;
-        (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
-        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
-        if (response.results.length > 0) {
-            notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
-            clearGallery();
-            renderGallery(movies);
-        } else {
-            notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
-            clearGallery(); // Wyczyszczenie galerii
-        }
-    } catch (error) {
-        console.error("Error fetching search movies:", error);
-    }
+    toggleVisibility(headerSearch, myLibrary);
+    homeLink.classList.add("active");
+    libraryLink.classList.remove("active");
+    setHeaderBackground();
+    paginationButtons.style.display = "flex";
+    (0, _gallery.clearGallery)();
+    (0, _gallery.getHomepage)(1);
 };
-// Renderowanie Galerii
-const renderGallery = (dataGallery, rating)=>{
-    try {
-        // Pobranie danych o filmach z galerii
-        const movies1 = dataGallery;
-        // Znalezienie kontenera dla galerii filmów
-        const galleryContainer = document.getElementById("gallery-container");
-        // Ukrycie komunikatu o braku wyników na start
-        const notResult = document.getElementById("not-result");
-        notResult.style.display = "none";
-        // Sprawdzenie czy lista filmów nie jest pusta
-        if (movies1.length > 0) {
-            // Pobranie danych o najbardziej popularnych filmach
-            const newContent = movies1.map((movie)=>{
-                let posterPath;
-                if (movie.poster_path) posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-                else posterPath = "https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.png?raw=true";
-                // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
-                let categories = "Without category";
-                // Ustalenie roku wydania filmu
-                let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "Without date";
-                // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
-                if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genre)=>genre.name).join(", ");
-                else if (movie.genre_ids && movie.genre_ids.length > 0) {
-                    categories = getGenres(movie.genre_ids);
-                    if (!categories) categories = "Without category";
-                }
-                console.log("rating: ", rating);
-                let rate = rating ? ` <span class="movie-info-rating">${movie.vote_average.toFixed(1)}</span>` : ``;
-                // Zbudowanie kodu HTML dla karty filmu
-                const movieCard = `
-          <div class="movie-card" data-movie-id="${movie.id}">
-          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
-          <div class="movie-details">
-          <p class="movie-title">${movie.title}</p>
-          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
-          </div>
-          </div>
-        `;
-                return movieCard;
-            }).join("");
-            //galleryContainer.innerHTML = newContent;
-            galleryContainer.insertAdjacentHTML("beforeend", newContent);
-            // Wstawienie wygenerowanego kodu HTML do kontenera galerii
-            //galleryContainer.innerHTML = newContent;
-            // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
-            notResult.style.display = "none";
-        } else {
-            // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
-            //galleryContainer.innerHTML = '';
-            notResult.style.display = "block";
-            // Wyczyszczenie galerii
-            clearGallery();
-        }
-        // Obsługa zdarzenia kliknięcia dla każdej karty filmu
-        const movieCards = document.querySelectorAll(".movie-card");
-        movieCards.forEach((card)=>{
-            card.addEventListener("click", async ()=>{
-                const movieId = card.dataset.movieId;
-                // Pobranie szczegółowych informacji o wybranym filmie
-                const movieDetails = await (0, _api.fetchMovieDetails)(movieId);
-                // Otwarcie modalu z informacjami o filmie
-                openModal(movieDetails);
-                // Wyświetlenie dodatkowych informacji o filmie
-                displayMovieDetails(movieDetails);
-            });
-        });
-    } catch (error) {
-        // Obsługa błędu w przypadku problemów z renderowaniem galerii
-        console.error("Error rendering gallery:", error);
-        // Wyświetlenie komunikatu o braku wyników w przypadku błędu
-        const notResult = document.getElementById("not-result");
-        notResult.style.display = "block";
-    }
+// obsługa kliknięcia w przycisk 'watched'
+const libraryClick = ()=>{
+    watchedHeader.click();
 };
-// Ukrycie komunikatu o braku wyników na start
-document.addEventListener("DOMContentLoaded", ()=>{
-    const notResult = document.getElementById("not-result");
-    notResult.style.display = "none";
+// obsługa kliknięcia w przycisk 'my library'
+const myLibraryButtonClick = (event)=>{
+    event.preventDefault();
+    toggleVisibility(myLibrary, headerSearch);
+    homeLink.classList.remove("active");
+    libraryLink.classList.add("active");
+    setHeaderBackground();
+    paginationButtons.style.display = "none";
+    libraryClick(watchedButton);
+};
+// obsługa zdarzenia kliknięcia w interaktywne elementy nagłówka
+logo.addEventListener("click", homeButtonClick);
+homeLink.addEventListener("click", homeButtonClick);
+libraryLink.addEventListener("click", myLibraryButtonClick);
+logIn.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "block";
 });
-const clearGallery = ()=>{
-    const galleryContainer = document.getElementById("gallery-container");
-    galleryContainer.innerHTML = ""; // Wyczyszczenie zawartości galerii
-};
-// // Przeniesienie nasłuchiwania zdarzenia kliknięcia przycisku "Trailer" poza funkcję openModal
-// document.addEventListener('DOMContentLoaded', () => {
-//   const trailerButton = document.querySelector('#movieTrailerButton');
-//   trailerButton.target = '_blank';
-//   trailerButton.addEventListener('click', async () => {
-//     try {
-//       // Pobranie identyfikatora filmu
-//       const movieId = movieData.id;
-//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-//       const trailersResponse = await fetchMovieTrailers(movieId);
-//       // Wyświetlenie danych zwiastunu w konsoli
-//       console.log('Trailers:', trailersResponse);
-//       // Sprawdzenie, czy istnieją zwiastuny
-//       if (trailersResponse.results && trailersResponse.results.length > 0) {
-//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
-//         trailersResponse.results.forEach(trailer => {
-//           if (trailer.site === 'YouTube') {
-//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
-//           }
-//         });
-//       } else {
-//         console.log('No trailers available');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching movie trailers:', error);
-//     }
-//   });
-// });
-// Funkcja openModal
-const openModal = (movieData)=>{
-    const modal = document.getElementById("myModal");
-    modal.style.display = "block";
-    const modalContent = document.getElementById("modalContent");
-    modalContent.innerHTML = `
-  <div class="modal-container">
-    <div class="movie-poster-modal">
-      <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${movieData.poster_path}" alt="${movieData.title} Photo">
-    </div>
-    <div class="modal-movie-info">
-      <h2>${movieData.title}</h2>
-
-      <div class="info-item">
-        <div class="pernament-item">
-          <p>Vote / Votes </p>
-          <p>Popularity </p>
-          <p>Orginal Title </p>
-          <p>Genre </p>
-        </div>
-
-        <div class="variables-item">
-          <p><span class="average-vote">${movieData.vote_average.toFixed(1)} </span>/ <span class="count-vote">${movieData.vote_count}</span></p>
-            <p>${movieData.popularity}</p>
-            <p>${movieData.original_title}</p>
-            <p>${movieData.genres.map((genre)=>genre.name).join(", ")}</p>
-        </div>
-      </div>
-      <div class="about-movie">
-        <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
-      </div>
-
-      <div class="modal-buttons">
-        <button class="watchedButton">Add to Watched</button>
-        <button class="queuedButton">Add to Queue</button>
-        <button id="movieTrailerButton">Trailer</button>
-      </div>
-    </div>
-  </div>
-  `;
-    const watchedButton = document.getElementsByClassName("watchedButton")[0];
-    watchedButton.onclick = ()=>{
-        (0, _localstorage.addToWatchedMovies)(movieData);
-    };
-    const queuedButton = document.getElementsByClassName("queuedButton")[0];
-    queuedButton.onclick = ()=>{
-        (0, _localstorage.addToQueue)(movieData);
-    };
-    // // Obsługa zdarzenia kliknięcia przycisku "Trailer"
-    // const trailerButton = document.querySelector('#movieTrailerButton');
-    // trailerButton.addEventListener('click', async () => {
-    //   try {
-    //     // Pobranie identyfikatora filmu
-    //     const movieId = movieData.id;
-    //     // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-    //     const trailersResponse = await fetchMovieTrailers(movieId);
-    //     // Wyświetlenie danych zwiastunu w konsoli
-    //     console.log('Trailers:', trailersResponse);
-    //     // Sprawdzenie, czy istnieją zwiastuny
-    //     if (trailersResponse.results && trailersResponse.results.length > 0) {
-    //       // Otwarcie zwiastunu w modalnym oknie za pomocą biblioteki basicLightbox
-    //       const firstTrailer = trailersResponse.results[0];
-    //       if (firstTrailer.site === 'YouTube') {
-    //         const trailerUrl = `https://www.youtube-nocookie.com/embed/${firstTrailer.key}`;
-    //         // const trailerUrl = `https://www.youtube.com/embed/${firstTrailer.key}`;
-    //         // const trailerUrl = `https://www.youtube.com/watch?v=${firstTrailer.key}`;
-    //         const trailerModal = basicLightbox.create(`
-    //         <iframe width="560" height="315" src="${trailerUrl}" frameborder="0" allowfullscreen></iframe>
-    //       `);
-    //         trailerModal.show();
-    //       }
-    //     } else {
-    //       console.log('No trailers available');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error fetching movie trailers:', error);
-    //   }
-    // });
-    // Obsługa zdarzenia kliknięcia przycisku "Trailer"
-    const trailerButton = document.querySelector("#movieTrailerButton");
-    trailerButton.addEventListener("click", async ()=>{
-        try {
-            // Pobranie identyfikatora filmu
-            const movieId = movieData.id;
-            // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-            const trailersResponse = await (0, _api.fetchMovieTrailers)(movieId);
-            // Wyświetlenie danych zwiastunu w konsoli
-            console.log("Trailers:", trailersResponse);
-            // Sprawdzenie, czy istnieją zwiastuny
-            if (trailersResponse.results && trailersResponse.results.length > 0) // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
-            trailersResponse.results.forEach((trailer)=>{
-                if (trailer.site === "YouTube") window.open(`https://www.youtube.com/watch?v=${trailer.key}`, "_blank");
-            });
-            else console.log("No trailers available");
-        } catch (error) {
-            console.error("Error fetching movie trailers:", error);
-        }
-    });
-    const closeButton = document.querySelector(".close");
-    closeButton.onclick = ()=>{
-        modal.style.display = "none";
-    };
-    // Obsługa zdarzenia keydown
-    document.addEventListener("keydown", function(event) {
-        if (event.key === "Escape") modal.style.display = "none";
-    });
-    window.onclick = (event)=>{
-        if (event.target == modal) modal.style.display = "none";
-    };
-};
-// //Aleksander Modal
-// const openModal = movieData => {
-//   const modal = document.getElementById('myModal');
-//   modal.style.display = 'block';
-//   const modalContent = document.getElementById('modalContent');
-//   modalContent.innerHTML = `
-//   <div class="modal-container">
-//     <div class="movie-poster-modal">
-//       <img class="movie-poster" src="https://image.tmdb.org/t/p/w500${
-//         movieData.poster_path
-//       }" alt="${movieData.title} Photo">
-//      </div>
-//     <div>
-//       <h2>${movieData.title}</h2>
-//       <div class="info-item">
-//       <p>Vote / Votes
-//       <span>
-//       <span class="average-vote">${movieData.vote_average}</span> /<span class="count-vote">${
-//     movieData.vote_count
-//   }</span>
-//         </span>
-//       </p>
-//       <p>Popularity <span class="info-item-color" >${movieData.popularity}</span></p>
-//       <p>Orginal Title <span class="info-item-color original-title">${
-//         movieData.original_title
-//       }</span></p>
-//       <p>Genre <span class="info-item-color">${getGenres(movieData.genres)}</span></p>
-//       </div>
-//       <div class="about-movie">
-//       <p><span class="about-movie-details">About</span></br> ${movieData.overview}</p>
-//       </div>
-//       <div class="modal-buttons">
-//         <button class="watchedButton">Add to Watched</button>
-//         <button class="queuedButton">Add to Queue</button>
-//       </div>
-//     </div>
-//     </div>
-//   `;
-//   const watchedButton = document.getElementsByClassName('watchedButton')[0];
-//   watchedButton.onclick = () => {
-//     addToWatchedMovies(movieData);
-//   };
-//   const queuedButton = document.getElementsByClassName('queuedButton')[0];
-//   queuedButton.onclick = () => {
-//     addToQueue(movieData);
-//   };
-//   const trailerButton = document.querySelector('#movieTrailerButton');
-//   trailerButton.target = '_blank';
-//   // trailerButton.addEventListener('click', async () => {
-//   //   try {
-//   //     // Pobranie identyfikatora filmu
-//   //     const movieId = movieData.id;
-//   //     // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-//   //     const trailersResponse = await fetchMovieTrailers(movieId);
-//   //     // Wyświetlenie danych zwiastunu w konsoli
-//   //     console.log('Trailers:', trailersResponse);
-//   //     // Sprawdzenie, czy istnieją zwiastuny
-//   //     if (trailersResponse.results && trailersResponse.results.length > 0) {
-//   //       // Otwarcie pierwszego zwiastunu w nowej karcie przeglądarki, jeśli istnieje
-//   //       const firstTrailer = trailersResponse.results[0];
-//   //       if (firstTrailer.site === 'YouTube') {
-//   //         window.open(`https://www.youtube.com/watch?v=${firstTrailer.key}`, '_blank');
-//   //       }
-//   //     } else {
-//   //       console.log('No trailers available');
-//   //     }
-//   //   } catch (error) {
-//   //     console.error('Error fetching movie trailers:', error);
-//   //   }
-//   // });
-//   trailerButton.addEventListener('click', async () => {
-//     try {
-//       // Pobranie identyfikatora filmu
-//       const movieId = movieData.id;
-//       // Wysłanie żądania do API w celu pobrania zwiastunu filmu
-//       const trailersResponse = await fetchMovieTrailers(movieId);
-//       // Wyświetlenie danych zwiastunu w konsoli
-//       console.log('Trailers:', trailersResponse);
-//       // Sprawdzenie, czy istnieją zwiastuny
-//       if (trailersResponse.results && trailersResponse.results.length > 0) {
-//         // Iteracja przez zwiastuny i otwarcie ich w nowej karcie przeglądarki
-//         trailersResponse.results.forEach(trailer => {
-//           if (trailer.site === 'YouTube') {
-//             window.open(`https://www.youtube.com/watch?v=${trailer.key}`, '_blank');
-//           }
-//         });
-//       } else {
-//         console.log('No trailers available');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching movie trailers:', error);
-//     }
-//   });
-//   const span = document.getElementsByClassName('close')[0];
-//   span.onclick = () => {
-//     modal.style.display = 'none';
-//   };
-//   // Obsługa zdarzenia keydown
-//   document.addEventListener('keydown', function (event) {
-//     if (event.key === 'Escape') {
-//       modal.style.display = 'none';
-//     }
-//   });
-//   window.onclick = event => {
-//     if (event.target == modal) {
-//       modal.style.display = 'none';
-//     }
-//   };
-// };
-//scrollToTop by Marek
-const scrollToTopButton = document.getElementById("scrollToTopButton");
-// Pokaż przycisk, gdy użytkownik przewinie stronę w dół
-window.addEventListener("scroll", ()=>{
-    if (window.pageYOffset > 100) // Możesz dostosować wartość, aby przycisk pojawił się po przewinięciu o określoną liczbę pikseli
-    scrollToTopButton.style.display = "block";
-    else scrollToTopButton.style.display = "none";
+loginButton.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "none";
 });
-// Obsługa zdarzenia kliknięcia przycisku
-scrollToTopButton.addEventListener("click", ()=>{
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+registerButton.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "none";
 });
-// Funkcja do sprawdzania, czy element jest blisko dolnej krawędzi okna przeglądarki
-function isNearBottom(element, threshold) {
-    const rect = element.getBoundingClientRect();
-    return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + threshold;
+logoutButton.addEventListener("click", (event)=>{
+    event.preventDefault();
+    logInContainer.style.display = "none";
+});
+// obsługa zdarzenia zmiany rozmiaru okna
+window.addEventListener("resize", setHeaderBackground);
+// ukrycie wybranych elementów nagłówka, jeśli nie wybrana 'my library'
+if (myLibrary.style.display !== "flex") {
+    const headerLibraryElements = document.querySelectorAll(".header-library");
+    headerLibraryElements.forEach((element)=>{
+        element.style.display = "none";
+    });
 }
-// Event scroll na oknie przeglądarki
-const loadMoreContent = ()=>{
-    // Element, który monitorujemy, np. kontener na treści
-    const contentContainer = document.querySelector(".movie-card:last-child");
-    // Threshold - odległość od dolnej krawędzi, przy której chcemy zacząć ładować więcej treści
-    const threshold = 800; // w pikselach
-    // Sprawdzamy, czy element jest blisko dolnej krawędzi okna przeglądarki
-    if (isNearBottom(contentContainer, threshold)) {
-        // Jeśli tak, ładujemy więcej treści
-        if (homePageNo > 0) homePageNo++;
-        getHomepage(homePageNo);
-    }
-};
-const infinityScroll = document.getElementById("infinityScroll");
-let isInfinityScrollActive = false;
-// Obsługa zdarzenia kliknięcia przycisku
-infinityScroll.addEventListener("click", ()=>{
-    if (isInfinityScrollActive) // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
-    window.removeEventListener("scroll", loadMoreContent);
-    else // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
-    window.addEventListener("scroll", loadMoreContent);
-    // Zmiana stanu - włącz/wyłącz
-    isInfinityScrollActive = !isInfinityScrollActive;
-    // Początkowe ładowanie treści
-    getHomepage(homePageNo);
-    // Event scroll na oknie przeglądarki po kliknięciu przycisku
-    window.addEventListener("scroll", loadMoreContent);
-    // Usuń obsługę zdarzenia kliknięcia przycisku, aby nie powtarzać ładowania po kliknięciu
-    infinityScroll.removeEventListener("click", loadMoreContent);
-});
 
-},{"./api":"5mmx6","./localstorage":"ippo7","./pagination":"iC8Tx","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"ippo7":[function(require,module,exports) {
+},{"./gallery":"bA31f"}],"ippo7":[function(require,module,exports) {
+// dodanie podanego filmu do listy obejrzanych filmów
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "addToWatchedMovies", ()=>addToWatchedMovies);
 parcelHelpers.export(exports, "addToQueue", ()=>addToQueue);
 const addToWatchedMovies = (movieDetails)=>{
-    // Pobierz listę obejrzanych filmów z localStorage lub utwórz nową listę, jeśli nie istnieje
+    // pobiera listę obejrzanych filmów z localStorage lub tworzy nową, jeśli nie istnieje
     let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
-    if (!Array.isArray(watchedMovies)) watchedMovies = [];
+    // prawdopodobnie niepotrzebny fragment kodu ============== do usunięcia
+    // if (!Array.isArray(watchedMovies)) {
+    //   watchedMovies = [];
+    // }
+    // sprawdza, czy film jest już na liście obejrzanych
     let isMovieAlreadyWatched = watchedMovies.find((movie)=>movie.id === movieDetails.id);
-    //pobierz liste filmów z kolejki z local storage zeby ussunąć w razie wuz
+    //  pobiera listę filmów do oglądnięcia z localStorage lub tworzy nową, jeśli nie istnieje
     let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
-    // Jeśli film jeszcze nie został obejrzany, dodaj go do listy
+    // jeśli filmu nie ma na liście obejrzanych
     if (!isMovieAlreadyWatched) {
+        // dodaje film do listy obejrzanych i przesyła zaktualizowaną listę do localStorage
         watchedMovies.push(movieDetails);
         localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
-        console.log(`Added "${movieDetails.title}" to Watched Movies`);
-        //usuwa filmy jeśli znadjują sie w kolejce
+        // usuwa film z listy filmów do obejrzenia, jeśli na niej jest i przesyła zaktualizowaną listę do localStorage
         queuedMovies = queuedMovies.filter((movie)=>movie.id !== movieDetails.id);
         localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
-        refreshView();
-    } else console.log(`"${movieDetails.title}" is already in Watched Movies`);
-};
-const addToQueue = (movieDetails)=>{
-    let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
-    let isMovieInQueue = queuedMovies.find((movie)=>movie.id === movieDetails.id);
-    //pobierz liste filmów z obejrzanych z local storage zeby ussunąć w razie wu
-    let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
-    if (!isMovieInQueue) {
-        queuedMovies.push(movieDetails);
-        localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
-        console.log(`Added "${movieDetails.title}" to Queue `);
-        //usuwa filmy dodane do obejrzanych
-        watchedMovies = watchedMovies.filter((movie)=>movie.id !== movieDetails.id);
-        localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
-        refreshView();
-    } else console.log(`"${movieDetails.title}" is already in Queue`);
-};
-const refreshView = ()=>{
-//Tutaj wstawię później funkcje która będzie odświerzać widok po zmianie
-//Z queue do watched
-};
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"3VUnj":[function(require,module,exports) {
-// renderGallery.js
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "renderGallery", ()=>renderGallery);
-parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
-parcelHelpers.export(exports, "displayMovieDetails", ()=>displayMovieDetails);
-var _api = require("./api");
-var _gallery = require("./gallery");
-var _openModal = require("./openModal");
-const renderGallery = (dataGallery, rating)=>{
-    try {
-        // Pobranie danych o filmach z galerii
-        const movies = dataGallery;
-        // Znalezienie kontenera dla galerii filmów
-        const galleryContainer = document.getElementById("gallery-container");
-        // Ukrycie komunikatu o braku wyników na start
-        const notResult = document.getElementById("not-result");
-        notResult.style.display = "none";
-        // Sprawdzenie czy lista filmów nie jest pusta
-        if (movies.length > 0) {
-            // Pobranie danych o najbardziej popularnych filmach
-            const newContent = movies.map((movie)=>{
-                let posterPath;
-                if (movie.poster_path) posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-                else posterPath = "../img/kolaz-w-tle-filmu.png";
-                // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
-                let categories = "Without category";
-                // Ustalenie roku wydania filmu
-                let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "Without date";
-                // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
-                if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genre)=>genre.name).join(", ");
-                else if (movie.genre_ids && movie.genre_ids.length > 0) {
-                    categories = (0, _gallery.getGenres)(movie.genre_ids);
-                    if (!categories) categories = "Without category";
-                }
-                console.log("rating: ", rating);
-                let rate = rating ? ` <span class="movie-info-rating">${movie.vote_average.toFixed(1)}</span>` : ``;
-                // Zbudowanie kodu HTML dla karty filmu
-                const movieCard = `
-          <div class="movie-card" data-movie-id="${movie.id}">
-          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
-          <div class="movie-details">
-          <p class="movie-title">${movie.title}</p>
-          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
-          </div>
-          </div>
-        `;
-                return movieCard;
-            }).join("");
-            //galleryContainer.innerHTML = newContent;
-            galleryContainer.insertAdjacentHTML("beforeend", newContent);
-            // Wstawienie wygenerowanego kodu HTML do kontenera galerii
-            //galleryContainer.innerHTML = newContent;
-            // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
-            notResult.style.display = "none";
-        } else {
-            // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
-            //galleryContainer.innerHTML = '';
-            notResult.style.display = "block";
-            // Wyczyszczenie galerii
-            clearGallery();
-        }
-        // Obsługa zdarzenia kliknięcia dla każdej karty filmu
-        const movieCards = document.querySelectorAll(".movie-card");
-        movieCards.forEach((card)=>{
-            card.addEventListener("click", async ()=>{
-                const movieId = card.dataset.movieId;
-                // Pobranie szczegółowych informacji o wybranym filmie
-                const movieDetails = await (0, _api.fetchMovieDetails)(movieId);
-                // Otwarcie modalu z informacjami o filmie
-                (0, _openModal.openModal)(movieDetails);
-                // Wyświetlenie dodatkowych informacji o filmie
-                displayMovieDetails(movieDetails);
-            });
-        });
-    } catch (error) {
-        // Obsługa błędu w przypadku problemów z renderowaniem galerii
-        console.error("Error rendering gallery:", error);
-        // Wyświetlenie komunikatu o braku wyników w przypadku błędu
-        const notResult = document.getElementById("not-result");
-        notResult.style.display = "block";
+    // refreshView(); 
     }
 };
-const clearGallery = ()=>{
-    const galleryContainer = document.getElementById("gallery-container");
-    galleryContainer.innerHTML = "";
+const addToQueue = (movieDetails)=>{
+    //  pobiera listę filmów do oglądnięcia z localStorage lub tworzy nową, jeśli nie istnieje
+    let queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
+    // sprawdza, czy film jest już na liście filmó do obejrzenia
+    let isMovieInQueue = queuedMovies.find((movie)=>movie.id === movieDetails.id);
+    // pobiera listę obejrzanych filmów z localStorage lub tworzy nową, jeśli nie istnieje
+    let watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+    // jeśli filmu nie ma na liście filmów do obejrzenia
+    if (!isMovieInQueue) {
+        // dodaje film do listy obejrzanych i przesyła zaktualizowaną listę do localStorage
+        queuedMovies.push(movieDetails);
+        localStorage.setItem("queuedMovies", JSON.stringify(queuedMovies));
+        // usuwa film z listy filmów do obejrzenia, jeśli na niej jest i przesyła zaktualizowaną listę do localStorage
+        watchedMovies = watchedMovies.filter((movie)=>movie.id !== movieDetails.id);
+        localStorage.setItem("watchedMovies", JSON.stringify(watchedMovies));
+    // refreshView();
+    }
+}; // const refreshView = () => {
+ //Tutaj wstawię później funkcje która będzie odświerzać widok po zmianie
+ //Z queue do watched
+ // };
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"8Mni5":[function(require,module,exports) {
+// pobranie wskażnika okna modalnego
+const modal = document.getElementById("modalGoit");
+// pobranie wskażnika przycisku, który otwiera okno modalne
+const btn = document.querySelector(".footer-btn");
+// pobranie wskażnika elementu <span>, który zamyka okno modalne
+const span = document.querySelector(".close-modal-btn-goit");
+// obsługa kliknięcia na przycisk otwierający okno modalne 'goit-team'
+btn.onclick = function() {
+    modal.style.display = "block";
 };
-const displayMovieDetails = (movieDetails)=>{
-    // Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
-    console.log(movieDetails);
+// obsługa kliknięcia na przycisk zamykający okno modalne
+span.onclick = function() {
+    modal.style.display = "none";
+};
+// obsługa kliknięcia poza okno modalne zamykającego to okno
+window.onclick = function(event) {
+    if (event.target == modal) modal.style.display = "none";
+};
+// obsługa zdarzenia naciśnięcia klawisza Esc zamkykającego okno modalne
+document.onkeydown = function(event) {
+    if (event.key === "Escape") modal.style.display = "none";
 };
 
-},{"./api":"5mmx6","./gallery":"bA31f","./openModal":"72exX","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"72exX":[function(require,module,exports) {
+},{}],"gpXqf":[function(require,module,exports) {
+// przełączanie 
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "toggleModal", ()=>toggleModal);
+const toggleModal = (modalId)=>{
+    const modal = document.getElementById(modalId);
+    if (modal) modal.style.display = modal.style.display === "block" ? "none" : "block";
+};
+//wydaje mi się że chciałeś zrobić to w ten sposób kwestia wyboru
+//    if (modal) {
+//     modal.style.visibility = modal.style.visibility === 'visible' ? 'hidden' : 'visible';
+//   }
+// };
+const openModalBtns = document.querySelectorAll(".openModalBtn");
+// dodanie obsługi kliknięcia dla każdej karty filmu, które otwiera okno modalne ze szczegółami filmu
+openModalBtns.forEach((btn)=>{
+    btn.addEventListener("click", ()=>{
+        const modalId = btn.getAttribute("id");
+        toggleModal(modalId);
+    });
+});
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"72exX":[function(require,module,exports) {
 // openModal.js
 // import basicLightbox from 'basiclightbox';
 // import * as basicLightbox from 'basiclightbox';
@@ -32943,7 +32660,7 @@ const openModal = (movieData)=>{
           <div class="modal-buttons">
             <button class="watchedButton">Add to Watched</button>
             <button class="queuedButton">Add to Queue</button>
-            <button class="movieTrailerButton">Trailer</button>
+            <button class="movieTrailerButton" id="movieTrailerButton">Trailer</button>
           </div>
         </div>
       </div>
@@ -33244,144 +32961,294 @@ function openTrailerModal(trailerKey) {
     ])(1);
 });
 
-},{}],"6K7Vw":[function(require,module,exports) {
-
-},{}],"8Mni5":[function(require,module,exports) {
-// Pobranie okna modalnego
-const modal = document.getElementById("modalGoit");
-// Pobranie przycisku, który otwiera okno modalne
-const btn = document.querySelector(".footer-btn"); // Zmiana na pobranie przycisku po klasie
-// Pobranie elementu <span>, który zamyka okno modalne
-const span = document.querySelector(".close-modal-btn-goit"); // Zmienione na querySelector dla spójności
-// Kiedy użytkownik kliknie na przycisk, otwórz okno modalne
-btn.onclick = function() {
-    modal.style.display = "block";
-};
-// Kiedy użytkownik kliknie na <span> (x), zamknij okno modalne
-span.onclick = function() {
-    modal.style.display = "none";
-};
-// Kiedy użytkownik kliknie poza oknem modalnym, zamknij je
-window.onclick = function(event) {
-    if (event.target == modal) modal.style.display = "none";
-};
-// Dodanie obsługi zamknięcia okna modalnego przez naciśnięcie klawisza Esc
-document.onkeydown = function(event) {
-    if (event.key === "Escape") modal.style.display = "none";
-};
-
-},{}],"hLtdZ":[function(require,module,exports) {
+},{}],"3VUnj":[function(require,module,exports) {
+// renderGallery.js
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "toggleModal", ()=>toggleModal);
-const toggleModal = (modalId)=>{
-    const modal = document.getElementById(modalId);
-    if (modal) modal.style.display = modal.style.display === "block" ? "none" : "block";
-};
-//wydaje mi się że chciałeś zrobić to w ten sposób kwestia wyboru
-//    if (modal) {
-//     modal.style.visibility = modal.style.visibility === 'visible' ? 'hidden' : 'visible';
-//   }
-// };   
-const openModalBtns = document.querySelectorAll(".openModalBtn");
-// dla każdego przycisku otwórz modal
-openModalBtns.forEach((btn)=>{
-    btn.addEventListener("click", ()=>{
-        const modalId = btn.getAttribute("id");
-        toggleModal(modalId);
-    });
-});
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"kxv7b":[function(require,module,exports) {
-var _gallery = require("./gallery");
-const headerNaviElements = document.getElementsByClassName("header-navi");
-const headerBG = document.getElementById("headerBG");
-const homeLink = headerNaviElements[0].getElementsByTagName("a")[0];
-const libraryLink = headerNaviElements[0].getElementsByTagName("a")[1];
-const logIn = headerNaviElements[0].getElementsByTagName("a")[2];
-const logInContainer = document.querySelector(".sign-in-container");
-const registerButton = document.getElementById("register-button");
-const loginButton = document.getElementById("login-button");
-const logoutButton = document.getElementById("logout-button");
-const myLibrary = document.querySelector(".header-library");
-const headerSearch = document.querySelector(".header-search");
-const watchedButton = document.getElementById("watchedHeader");
-const paginationButtons = document.getElementById("pagination-container");
-const logo = document.getElementById("logo");
-const toggleVisibility = (elementToShow, elementToHide)=>{
-    elementToShow.style.visibility = "visible";
-    elementToHide.style.visibility = "hidden";
-    elementToShow.style.display = "flex";
-    elementToHide.style.display = "none";
-};
-const libraryClick = ()=>{
-    watchedHeader.click();
-};
-const setHeaderBackground = ()=>{
-    const screenWidth = window.innerWidth;
-    let backgroundImageUrl = "";
-    if (myLibrary.style.display === "flex") {
-        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-desktop.jpg?raw=true")';
-        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-tablet.jpg?raw=true")';
-        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-lib-mobile.jpg?raw=true")';
-    } else if (headerSearch.style.display === "flex") {
-        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
-        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
-        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
-    } else {
-        if (screenWidth >= 1280) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-desktop.jpg?raw=true")';
-        else if (screenWidth >= 768) backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-tablet.jpg?raw=true")';
-        else backgroundImageUrl = 'url("https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/bg-home-mobile.jpg?raw=true")';
+parcelHelpers.export(exports, "renderGallery", ()=>renderGallery);
+parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
+parcelHelpers.export(exports, "displayMovieDetails", ()=>displayMovieDetails);
+var _api = require("./api");
+var _galleryML = require("./gallery-ML");
+var _openModal = require("./openModal");
+const renderGallery = (dataGallery, rating)=>{
+    try {
+        // Pobranie danych o filmach z galerii
+        const movies = dataGallery;
+        // Znalezienie kontenera dla galerii filmów
+        const galleryContainer = document.getElementById("gallery-container");
+        // Ukrycie komunikatu o braku wyników na start
+        const notResult = document.getElementById("not-result");
+        notResult.style.display = "none";
+        // Sprawdzenie czy lista filmów nie jest pusta
+        if (movies.length > 0) {
+            // Pobranie danych o najbardziej popularnych filmach
+            const newContent = movies.map((movie)=>{
+                let posterPath;
+                if (movie.poster_path) posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+                else posterPath = "https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.jpg?raw=true";
+                // Inicjalizacja zmiennej przechowującej informacje o gatunkach filmu
+                let categories = "Without category";
+                // Ustalenie roku wydania filmu
+                let releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "Without date";
+                // Sprawdzenie czy istnieje przynajmniej jeden gatunek filmu, jeśli tak, pobierz nazwy wszystkich gatunków
+                if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genre)=>genre.name).join(", ");
+                else if (movie.genre_ids && movie.genre_ids.length > 0) {
+                    categories = (0, _galleryML.getGenres)(movie.genre_ids);
+                    if (!categories) categories = "Without category";
+                }
+                console.log("rating: ", rating);
+                let rate = rating ? ` <span class="movie-info-rating">${movie.vote_average.toFixed(1)}</span>` : ``;
+                // Zbudowanie kodu HTML dla karty filmu
+                const movieCard = `
+          <div class="movie-card" data-movie-id="${movie.id}">
+          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
+          <div class="movie-details">
+          <p class="movie-title">${movie.title}</p>
+          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
+          </div>
+          </div>
+        `;
+                return movieCard;
+            }).join("");
+            //galleryContainer.innerHTML = newContent;
+            galleryContainer.insertAdjacentHTML("beforeend", newContent);
+            // Wstawienie wygenerowanego kodu HTML do kontenera galerii
+            //galleryContainer.innerHTML = newContent;
+            // Ukrycie komunikatu o braku wyników, jeśli lista filmów nie jest pusta
+            notResult.style.display = "none";
+        } else {
+            // Jeśli lista filmów jest pusta, wyświetl komunikat o braku wyników
+            //galleryContainer.innerHTML = '';
+            notResult.style.display = "block";
+            // Wyczyszczenie galerii
+            clearGallery();
+        }
+        // Obsługa zdarzenia kliknięcia dla każdej karty filmu
+        const movieCards = document.querySelectorAll(".movie-card");
+        movieCards.forEach((card)=>{
+            card.addEventListener("click", async ()=>{
+                const movieId = card.dataset.movieId;
+                // Pobranie szczegółowych informacji o wybranym filmie
+                const movieDetails = await (0, _api.fetchMovieDetails)(movieId);
+                // Otwarcie modalu z informacjami o filmie
+                (0, _openModal.openModal)(movieDetails);
+                // Wyświetlenie dodatkowych informacji o filmie
+                displayMovieDetails(movieDetails);
+            });
+        });
+    } catch (error) {
+        // Obsługa błędu w przypadku problemów z renderowaniem galerii
+        console.error("Error rendering gallery:", error);
+        // Wyświetlenie komunikatu o braku wyników w przypadku błędu
+        const notResult = document.getElementById("not-result");
+        notResult.style.display = "block";
     }
-    headerBG.style.backgroundImage = backgroundImageUrl;
 };
-setHeaderBackground();
-const homeButtonClick = (event)=>{
-    event.preventDefault();
-    toggleVisibility(headerSearch, myLibrary);
-    homeLink.classList.add("active");
-    libraryLink.classList.remove("active");
-    setHeaderBackground();
-    paginationButtons.style.display = "flex";
-    (0, _gallery.clearGallery)();
-    (0, _gallery.getHomepage)(1);
+const clearGallery = ()=>{
+    const galleryContainer = document.getElementById("gallery-container");
+    galleryContainer.innerHTML = "";
 };
-const myLibraryButtonClick = (event)=>{
-    event.preventDefault();
-    toggleVisibility(myLibrary, headerSearch);
-    homeLink.classList.remove("active");
-    libraryLink.classList.add("active");
-    setHeaderBackground();
-    paginationButtons.style.display = "none";
-    libraryClick(watchedButton);
+const displayMovieDetails = (movieDetails)=>{
+    // Tutaj możemy zaimplementować logikę wyświetlania informacji o filmie w modalu
+    console.log(movieDetails);
 };
-logo.addEventListener("click", homeButtonClick);
-homeLink.addEventListener("click", homeButtonClick);
-libraryLink.addEventListener("click", myLibraryButtonClick);
-logIn.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "block";
-});
-loginButton.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "none";
-});
-registerButton.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "none";
-});
-logoutButton.addEventListener("click", (event)=>{
-    event.preventDefault();
-    logInContainer.style.display = "none";
-});
-window.addEventListener("resize", setHeaderBackground);
-if (myLibrary.style.display !== "flex") {
-    const headerLibraryElements = document.querySelectorAll(".header-library");
-    headerLibraryElements.forEach((element)=>{
-        element.style.display = "none";
+
+},{"./api":"5mmx6","./gallery-ML":"h62vJ","./openModal":"72exX","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}],"h62vJ":[function(require,module,exports) {
+// gallery.js
+// import {
+//   fetchMovieDetails,
+//   fetchMovieTrailers,
+//   fetchSearchMovies,
+//   fetchTrendingMovies,
+//   genresName,
+// } from './api';
+// import { addToQueue, addToWatchedMovies } from './localstorage';
+// import { createPagination, setCurrentPage } from './pagination';
+// export let homePageNo = 0;
+// export let searPageNo = 1;
+// let isInfinityScrollActive = 0;
+// let isInfinityScrollEnable = 0;
+// let searchQuery;
+// let totalPages;
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "homePageNo", ()=>homePageNo);
+parcelHelpers.export(exports, "getGenres", ()=>getGenres);
+parcelHelpers.export(exports, "getHomepage", ()=>getHomepage);
+parcelHelpers.export(exports, "getSearchResult", ()=>getSearchResult);
+parcelHelpers.export(exports, "clearGallery", ()=>clearGallery);
+var _api = require("./api");
+// import { createPagination, setCurrentPage } from './pagination';
+// import { createPagination, currentPage, setCurrentPage } from './pagination';
+var _pagination = require("./pagination");
+var _renderGallery = require("./renderGallery"); // Dodano import funkcji związanych z galerią
+let homePageNo = 0;
+let totalPages;
+const getGenres = (genreIds)=>{
+    // Pobranie nazw gatunków z listy genresName zdefiniowanej w api.js
+    const genres = genreIds.map((genreId)=>{
+        const foundGenre = (0, _api.genresName).find((genre)=>genre.id === genreId);
+        return foundGenre ? foundGenre.name : "";
     });
+    // Zwrócenie połączonej listy gatunków
+    return genres.join(", ");
+};
+const displayWatchedMovies = ()=>{
+    try {
+        const watchedMovies = JSON.parse(localStorage.getItem("watchedMovies")) || [];
+        const moviesWithGenres = watchedMovies.map((movie)=>{
+            let categories = "Without category";
+            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
+            return {
+                ...movie,
+                categories
+            };
+        });
+        homePageNo = 0;
+        (0, _renderGallery.clearGallery)();
+        // isInfinityScrollActive = 0;
+        (0, _renderGallery.renderGallery)(moviesWithGenres, 1);
+    } catch (error) {
+        console.error("Error displaying watched movies:", error);
+    }
+};
+const displayQueuedMovies = ()=>{
+    try {
+        const queuedMovies = JSON.parse(localStorage.getItem("queuedMovies")) || [];
+        const moviesWithGenres = queuedMovies.map((movie)=>{
+            let categories = "Without category";
+            if (movie.genres && movie.genres.length > 0) categories = movie.genres.map((genres)=>genres.name).join(", ");
+            return {
+                ...movie,
+                categories
+            };
+        });
+        homePageNo = 0;
+        (0, _renderGallery.clearGallery)();
+        // isInfinityScrollActive = 0;
+        (0, _renderGallery.renderGallery)(moviesWithGenres, 1);
+    } catch (error) {
+        console.error("Error displaying queued movies:", error);
+    }
+};
+//Obsługa HomePage i Buttonów
+window.addEventListener("DOMContentLoaded", ()=>{
+    getHomepage(1); // Wywołujemy funkcję wyświetlającą HomePage
+    const libraryWatched = document.getElementById("watchedHeader");
+    libraryWatched.addEventListener("click", displayWatchedMovies);
+    const libraryQueued = document.getElementById("queueHeader");
+    libraryQueued.addEventListener("click", displayQueuedMovies);
+// const libraryWatchedButton = document.getElementById('watchedModal');
+// libraryWatchedButton.addEventListener('click', displayWatchedMovies);
+// const libraryQueuedButton = document.getElementById('queueModal');
+// libraryQueuedButton.addEventListener('click', displayQueuedMovies);
+});
+const getHomepage = async (pageNo)=>{
+    try {
+        const response = await (0, _api.fetchTrendingMovies)(pageNo);
+        (0, _renderGallery.clearGallery)();
+        (0, _renderGallery.renderGallery)(response.results, 0);
+        homePageNo = pageNo;
+        (0, _pagination.createPagination)(response.total_pages);
+    } catch (error) {
+        console.error("Error fetching trending movies:", error);
+    }
+};
+//Obsługa szukajki
+document.addEventListener("DOMContentLoaded", ()=>{
+    const searchForm = document.getElementById("search-form");
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    searchForm.addEventListener("submit", async (event)=>{
+        (0, _pagination.setCurrentPage)(1);
+        getSearchResult(event, 1);
+    });
+});
+const getSearchResult = async (event, pageNo)=>{
+    event.preventDefault();
+    homePageNo = pageNo;
+    const searchInput = document.querySelector(".search-form input");
+    const notResult = document.getElementById("not-result");
+    const searchQuery = searchInput.value.trim().toLowerCase().split(" ").join("+");
+    if (searchQuery) try {
+        const response = await (0, _api.fetchSearchMovies)(searchQuery, homePageNo);
+        totalPages = response.total_pages;
+        movies = response.results;
+        (0, _pagination.createPagination)(totalPages); //Wywołanie paginacji
+        searchInput.value = ""; // Wyczyszczenie pola wyszukiwania
+        if (response.results.length > 0) {
+            notResult.style.display = "none"; // Ukrycie komunikatu o braku wyników
+            (0, _renderGallery.clearGallery)();
+            (0, _renderGallery.renderGallery)(movies);
+        } else {
+            notResult.style.display = "block"; // Wyświetlenie komunikatu o braku wyników
+            (0, _renderGallery.clearGallery)(); // Wyczyszczenie galerii
+        }
+    } catch (error) {
+        console.error("Error fetching search movies:", error);
+    }
+};
+// Ukrycie komunikatu o braku wyników na start
+document.addEventListener("DOMContentLoaded", ()=>{
+    const notResult = document.getElementById("not-result");
+    notResult.style.display = "none";
+});
+const clearGallery = ()=>{
+    const galleryContainer = document.getElementById("gallery-container");
+    galleryContainer.innerHTML = ""; // Wyczyszczenie zawartości galerii
+};
+//scrollToTop by Marek
+const scrollToTopButton = document.getElementById("scrollToTopButton");
+// Pokaż przycisk, gdy użytkownik przewinie stronę w dół
+window.addEventListener("scroll", ()=>{
+    if (window.pageYOffset > 100) // Możesz dostosować wartość, aby przycisk pojawił się po przewinięciu o określoną liczbę pikseli
+    scrollToTopButton.style.display = "block";
+    else scrollToTopButton.style.display = "none";
+});
+// Obsługa zdarzenia kliknięcia przycisku
+scrollToTopButton.addEventListener("click", ()=>{
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});
+// Funkcja do sprawdzania, czy element jest blisko dolnej krawędzi okna przeglądarki
+function isNearBottom(element, threshold) {
+    const rect = element.getBoundingClientRect();
+    return rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + threshold;
 }
+// Event scroll na oknie przeglądarki
+const loadMoreContent = ()=>{
+    // Element, który monitorujemy, np. kontener na treści
+    const contentContainer = document.querySelector(".movie-card:last-child");
+    // Threshold - odległość od dolnej krawędzi, przy której chcemy zacząć ładować więcej treści
+    const threshold = 800; // w pikselach
+    // Sprawdzamy, czy element jest blisko dolnej krawędzi okna przeglądarki
+    if (isNearBottom(contentContainer, threshold)) {
+        // Jeśli tak, ładujemy więcej treści
+        if (homePageNo > 0) homePageNo++;
+        getHomepage(homePageNo);
+    }
+};
+const infinityScroll = document.getElementById("infinityScroll");
+let isInfinityScrollActive = false;
+// Obsługa zdarzenia kliknięcia przycisku
+infinityScroll.addEventListener("click", ()=>{
+    if (isInfinityScrollActive) // Jeżeli infinity scroll jest aktywny, usuwamy nasłuchiwanie zdarzenia scroll
+    window.removeEventListener("scroll", loadMoreContent);
+    else // Jeżeli infinity scroll nie jest aktywny, dodajemy nasłuchiwanie zdarzenia scroll
+    window.addEventListener("scroll", loadMoreContent);
+    // Zmiana stanu - włącz/wyłącz
+    isInfinityScrollActive = !isInfinityScrollActive;
+    // Początkowe ładowanie treści
+    getHomepage(homePageNo);
+    // Event scroll na oknie przeglądarki po kliknięciu przycisku
+    window.addEventListener("scroll", loadMoreContent);
+    // Usuń obsługę zdarzenia kliknięcia przycisku, aby nie powtarzać ładowania po kliknięciu
+    infinityScroll.removeEventListener("click", loadMoreContent);
+});
 
-},{"./gallery":"bA31f"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
+},{"./api":"5mmx6","./pagination":"iC8Tx","./renderGallery":"3VUnj","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
 
-//# sourceMappingURL=index.b6879e12.js.map
+//# sourceMappingURL=index.525749cd.js.map

@@ -1,6 +1,6 @@
 export let currentPage = 1;
 export const itemsPerPage = 20;
-import { getSearchResult, getHomepage } from './gallery';
+import { getHomepage, getSearchResult } from './gallery';
 
 // ustawianie numeru bieżącej strony
 export const setCurrentPage = value => {
@@ -110,10 +110,12 @@ const loadPage = (e, currentPage) => {
 document.querySelector('#pagination-container').addEventListener('click', e => {
   e.preventDefault();
 
-  if (e.target.tagName == 'BUTTON') { // kliknięty przycisk z numerem strony
+  if (e.target.tagName == 'BUTTON') {
+    // kliknięty przycisk z numerem strony
     currentPage = e.target.innerHTML;
     loadPage(e, currentPage);
-  } else if (e.target.tagName == 'A') { // kliknięty przycisk poprzedniej/kolejnej strony
+  } else if (e.target.tagName == 'A') {
+    // kliknięty przycisk poprzedniej/kolejnej strony
     if (e.target.firstElementChild.id === 'icon-arrow-left2') {
       currentPage -= 1;
       loadPage(e, currentPage);

@@ -141,7 +141,13 @@ export const openModal = movieData => {
         if (filteredTrailers.length > 0) {
           // Losowe wybranie zwiastunu spośród dostępnych
           const randomIndex = Math.floor(Math.random() * filteredTrailers.length);
-          openTrailerModal(filteredTrailers[randomIndex].key); // Otwieranie modalu z losowym zwiastunem
+          const trailerKey = filteredTrailers[randomIndex].key;
+          // Otwieranie modalu z losowym zwiastunem
+          openTrailerModal(trailerKey);
+
+          // Dodanie autoplay do iframe w oknie modalnym
+          const modalIframe = document.querySelector('.iframe-container');
+          modalIframe.setAttribute('src', `https://www.youtube.com/embed/${trailerKey}?autoplay=1`);
         } else {
           console.log('No trailers available');
         }

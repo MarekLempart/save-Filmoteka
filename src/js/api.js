@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://api.themoviedb.org/3/';
-const API_KEY = '2c31d985c0705d4cec824ff15c12500a';
+const API_KEY = 'c94d8e5ef8b4fe69956b21ebd01a6f37';
+
 const AUTHORIZATION =
   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYzMxZDk4NWMwNzA1ZDRjZWM4MjRmZjE1YzEyNTAwYSIsInN1YiI6IjY1ZTg0MWVjM2ZlMTYwMDE2MjVjZTAzZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.5HPQhM5yRj3vRPDY3tSFgGEmeCi69HNN3M4_g94gH5c';
 
@@ -114,6 +115,32 @@ export async function fetchMovieTrailers(movieId) {
   // console.log('response: ', response);
   return response.data;
 }
+// export async function fetchMovieTrailers(movieId) {
+//   const options = {
+//     method: 'GET',
+//   };
+
+//   const endpointUrl = 'movie';
+//   const searchParams = new URLSearchParams({
+//     api_key: API_KEY,
+//     language: 'en-US',
+//   });
+
+//   const url = `${BASE_URL}${endpointUrl}/${movieId}/videos?${searchParams}`;
+
+//   try {
+//     const response = await axios(url, options);
+//     if (!response.data || !response.data.results) {
+//       throw new Error('Failed to fetch movie trailers');
+//     }
+//     // Filtrowanie odpowiedzi, aby zwrócić tylko zwiastuny typu "Trailer"
+//     const trailers = response.data.results.filter(trailer => trailer.type === 'Trailer');
+//     return trailers;
+//   } catch (error) {
+//     console.error('Error fetching movie trailers:', error);
+//     throw error;
+//   }
+// }
 
 // GENRES_LIST
 export const genresName = [

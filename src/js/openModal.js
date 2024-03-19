@@ -44,7 +44,7 @@ export const openModal = movieData => {
           <div class="modal-buttons">
             <button class="watchedButton">Add to Watched</button>
             <button class="queuedButton">Add to Queue</button>
-            <button class="movieTrailerButton">Trailer</button>
+            <button class="movieTrailerButton" id="movieTrailerButton">Trailer</button>
           </div>
         </div>
       </div>

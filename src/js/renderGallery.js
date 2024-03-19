@@ -1,6 +1,6 @@
 // renderGallery.js
 import { fetchMovieDetails } from './api';
-import { getGenres } from './gallery';
+import { getGenres } from './gallery-ML';
 import { openModal } from './openModal';
 
 export const renderGallery = (dataGallery, rating) => {
@@ -22,7 +22,9 @@ export const renderGallery = (dataGallery, rating) => {
           if (movie.poster_path) {
             posterPath = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
           } else {
-            posterPath = '../img/kolaz-w-tle-filmu.png';
+            posterPath =
+              'https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.jpg?raw=true';
+            // '../img/kolaz-w-tle-filmu.png';
             //   'https://github.com/Krzysztof-GoIT/goit-projekt-filmoteka/blob/main/src/img/kolaz-w-tle-filmu.png?raw=true';
           }
 

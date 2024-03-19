@@ -18,7 +18,7 @@
   background-color: black;
   margin: 15% auto; /* 15% od góry i wyśrodkowane w poziomie */
   padding: 20px;
-  border: 1px solid #888;
+  border-radius: 14px;
   width: 80%; /* Możesz dostosować szerokość */
   height: auto;
 }
@@ -42,6 +42,7 @@
 /* Styl dla przycisku, który otwiera okno modalne */
 .footer-btn {
   cursor: pointer;
+  width: auto;
 }
 
 .footer-btn:hover {
@@ -57,9 +58,10 @@
 .modal-team-img-goit {
   width: 150px;
   height: 150px;
-  margin: auto;
+  margin:  auto;
   display: flex;
   justify-content: space-around;
+  border-radius: 50%;
 }
 .modal-team-header-goit {
   text-align: center;
@@ -67,4 +69,20 @@
 .modal-team-text-goit {
   color: white;
   text-align: center;
+  margin-top: 10px;
+}
+@media screen and (max-width: 767px) {
+  .modal-team-list-goit {
+  display: block;
+  margin-top: 10px;
+
+  .modal-team-img-goit {
+margin-top: 30px;
+  
+  }
+}
+.list-member-goit {
+  flex-basis: calc(50% - 10px);
+    margin: 10px; 
+    box-sizing: border-box; 
 }

@@ -4,7 +4,7 @@
   background-color: black;
   background-size: 100%;
   background-position: center;
-  height: 230px;
+  height: 200px;
   display: block;
 }
 
@@ -26,7 +26,6 @@
 
 /* tytuł strony */
 .header h2 {
-  opacity: 0;
   margin: 0;
   color: #ffffff;
   font-family: Roboto;
@@ -39,7 +38,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 40px 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 /* element menu */
@@ -89,9 +89,8 @@
 /* pole wyszukiwania */
 .search-form input {
   background-color: transparent;
-  size: 100%;
   width: 380px;
-  margin: 0;
+  padding-bottom: 4px;
   border: none;
   color: #ffffff;
 }
@@ -179,12 +178,6 @@
 
 /* style dla ekranów tabletów i komputerów */
 @media screen and (min-width: 768px) {
-  .header-navibox {
-    margin: 40px 32px;
-  }
-  .header h2 {
-    opacity: 1;
-  }
   .header-navi {
     gap: 40px;
   }

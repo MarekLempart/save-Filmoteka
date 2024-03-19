@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
+/* kontener na okno modalne z informacjami o filmie */
 .modal {
   display: none;
   position: fixed;
@@ -12,25 +11,27 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* zawartość okna modalnego */
 .modal-content {
   background-color: #fefefe;
   margin: auto;
+  border-radius: 15px;
   padding: 8px 20px 40px 20px;
   border: 1px solid #888;
-  max-width: 320px;
+  width: 320px;
   font-family: 'Roboto', sans-serif;
 }
 
-.modal-movie-info {
-  margin-top: 20px;
-}
+/* przycisk zamykania okna */
 .close {
   color: #aaaaaa;
   float: right;
-  font-size: 54px;
+  font-size: 50px;
   font-weight: 100;
+  margin: 0;
 }
 
+/* wskazany przycisk zamykania okna */
 .close:hover,
 .close:focus {
   color: #000;
@@ -39,107 +40,97 @@
   scale: 1.2;
 }
 
-.dev-tools-container {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
+/* zawartość okna modalnego z informacjami o filmie */
+.modal-container {
+  /* display: block; #fix 315*/
 }
 
-.dev-main-button {
+/* plakat filmu w kontenerze */
+.movie-poster-modal img {
+  width: 100%;
+  height: 357px;
+  margin-top: 48px;
   padding: 0;
-  background-color: transparent;
-  color: #fff;
-  border: none;
-  border-radius: 100%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 40px;
+  margin: 0;
 }
 
-.dev-moving-button:hover {
-  margin-left: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  font-size: 20px;
+/* kontener na informacje o filmie */
+.modal-movie-info {
+  margin-top: 20px;
+  max-width: 260px;
 }
 
-.dev-button-bar {
-  display: none;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.dev-button {
-  padding: 10px;
-  margin-right: 5px;
-  background-color: #f2f7fb;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.dev-button:hover {
-  background-color: #2980b9;
-}
-
-.movieData.title {
+/* tytuł filmu */
+.modal-movie-title {
   font-size: 20px;
   font-weight: 500;
   text-transform: uppercase;
   color: var(--movieDetails-color);
   margin-bottom: 20px;
+  overflow: hidden;
 }
+
+/* kontener na szczegółowe informacj eo filmie */
 .info-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  margin-top: 20px;
+  justify-content: left;
+  gap: 0px;
 }
 
+/* hasła szczegółowych informacji */
+.pernament-item {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  min-width: 80px;
+  color: var(--vote-color);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* wartości szczegółowych informacji */
+.variables-item {
+  color: var(--movieDetails-color);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-right: 30px;
+}
+
+/* średnia nota */
 .average-vote {
   background-color: var(--details-contrast);
   border-radius: 5px;
   color: var(--bg-color);
   padding: 1px 8px;
+  margin-right: 4px;
 }
 
+/* liczba głosów */
 .count-vote {
   background-color: var(--footer-bg);
   border-radius: 5px;
   color: var(--movieDetails-color);
   padding: 1px 8px;
-  margin-left: 8px;
+  /*margin-left: 8px;*/
 }
 
-.pernament-item {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.3;
+.slash-color {
   color: var(--vote-color);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 12px;
 }
-.variables-item {
-  color: var(--footer-bg);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.3;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 12px;
-}
+
+/* oryginalny tytuł */
 .original-title {
   text-transform: uppercase;
 }
+
+/* opis filmu */
 .about-movie {
   font-size: 12px;
   font-weight: 500;
@@ -149,18 +140,34 @@
   margin-top: 20px;
 }
 
+/* hasło przed opisem filmu */
+.about-movie-details {
+  text-transform: uppercase;
+}
+
+/* kontener na przyciski dodawania filmu do listy obejrzanych lub do obejrzenia */
 .modal-buttons {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   display: flex;
+  gap: 10px;
+  /* justify-content: space-between; */
   justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.modal-buttons button {
-  gap: 20px;
+/* kontener na przycisk do włączenia trailera filmu */
+.movie-trailer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.watchedButton {
+/* przyciski dodawania filmu do listy obejrzanych lub do obejrzenia */
+.watchedButton,
+.queuedButton {
   border-radius: 5px;
   width: 110px;
   height: 44px;
@@ -169,64 +176,94 @@
   border: none;
   color: var(--bg-color);
   font-weight: 500;
-  font-size: 12px;
+  font-size: 9px;
   line-height: 1.3;
   text-transform: uppercase;
   text-align: center;
-  margin-right: 20px;
   transition: transform 0.3s ease;
   padding: 6px 27px;
 }
 
-.queuedButton {
-  border: 1px solid #000;
+/* przycisk do włączenia trailera filmu */
+#movieTrailerButton {
   border-radius: 5px;
   width: 110px;
   height: 44px;
-  background-color: var(--bg-color);
+  color: var(--bg-color);
   cursor: pointer;
-
-  color: var(--movieDetails-color);
+  border: none;
+  color: var(--bg-color);
   font-weight: 500;
-  font-size: 12px;
+  font-size: 9px;
   line-height: 1.3;
   text-transform: uppercase;
   text-align: center;
-  transition: transform 0.3s ease;
 }
 
-.watchedButton:hover,
-.watchedButton:focus,
-.queuedButton:hover,
-.queuedButton:focus {
+/* wskazane przyciski */
+.watched-button:hover,
+.watched-button:focus,
+.queued-button:hover,
+.queued-button:focus,
+.movie-trailer button:hover,
+.movie-trailer button:focus {
   transform: scale(1.1);
 }
 
-.about-movie-details {
-  text-transform: uppercase;
-}
-
+/* style dla tabletu i komputera */
 @media screen and (min-width: 768px) {
   .modal-content {
-    max-width: 704px;
-    height: 552px;
+    width: 664px;
+    min-height: 552px;
   }
   .modal-container {
     display: flex;
   }
-
   .movie-poster-modal {
     margin-right: 68px;
+    margin-top: 40px;
+  }
+  .movie-poster-modal img {
+    width: 264px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .modal-movie-info {
+    margin-top: 41px;
+  }
+  .info-item {
+    margin-top: 20px;
   }
 }
 
 @media (min-width: 1280px) {
   .modal-content {
-    max-width: 806px;
-    height: 558px;
+    width: 704px;
+    min-height: 558px;
+    padding: 0 20px;
   }
-  .movieData.title {
+  .modal-container {
+    margin-bottom: 30px;
+  }
+  .modal-movie-title {
+    font-size: 30px;
+  }
+  .movie-poster-modal {
+    margin-right: 16px;
+  }
+  .movie-poster-modal img {
+    width: 375px;
+    height: 100%;
+  }
+  .modal-movie-info {
+    max-width: 260px;
+    margin-top: 41px;
+  }
+  .variables-item {
+    padding-right: 0;
+  }
+  .modal-movie-title {
     font-size: 30px;
   }
 }
-/* przenioslem CCS modala do modal-registration.css

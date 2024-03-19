@@ -32408,9 +32408,11 @@ const loadPage = (e, currentPage)=>{
 document.querySelector("#pagination-container").addEventListener("click", (e)=>{
     e.preventDefault();
     if (e.target.tagName == "BUTTON") {
+        // kliknięty przycisk z numerem strony
         currentPage = e.target.innerHTML;
         loadPage(e, currentPage);
     } else if (e.target.tagName == "A") {
+        // kliknięty przycisk poprzedniej/kolejnej strony
         if (e.target.firstElementChild.id === "icon-arrow-left2") {
             currentPage -= 1;
             loadPage(e, currentPage);
@@ -32741,7 +32743,12 @@ const openModal = (movieData)=>{
                 if (filteredTrailers.length > 0) {
                     // Losowe wybranie zwiastunu spośród dostępnych
                     const randomIndex = Math.floor(Math.random() * filteredTrailers.length);
-                    (0, _trailerModalDefault.default)(filteredTrailers[randomIndex].key); // Otwieranie modalu z losowym zwiastunem
+                    const trailerKey = filteredTrailers[randomIndex].key;
+                    // Otwieranie modalu z losowym zwiastunem
+                    (0, _trailerModalDefault.default)(trailerKey);
+                    // Dodanie autoplay do iframe w oknie modalnym
+                    const modalIframe = document.querySelector(".iframe-container");
+                    modalIframe.setAttribute("src", `https://www.youtube.com/embed/${trailerKey}?autoplay=1`);
                 } else console.log("No trailers available");
             } else console.log("No trailers available");
         } catch (error) {
@@ -33251,4 +33258,4 @@ infinityScroll.addEventListener("click", ()=>{
 
 },{"./api":"5mmx6","./pagination":"iC8Tx","./renderGallery":"3VUnj","@parcel/transformer-js/src/esmodule-helpers.js":"l14Tj"}]},["5rIoY"], "5rIoY", "parcelRequire4e2a")
 
-//# sourceMappingURL=index.525749cd.js.map
+//# sourceMappingURL=index.79e359e4.js.map

@@ -1084,10 +1084,15 @@ button:hover {
   color: #fff;
   background: none;
   border: none;
-  font-size: 24px;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 32px;
+  display: flex;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: -10px;
+  right: -10px;
 }
 
 .trailer-modal-content {
@@ -1119,4 +1124,4 @@ button:hover {
     height: 202px;
   }
 }
-/*# sourceMappingURL=index.120705eb.css.map */
+/*# sourceMappingURL=index.95597762.css.map */

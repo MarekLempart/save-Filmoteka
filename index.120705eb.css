@@ -789,7 +789,7 @@ a.arrow-left, a.arrow-right {
   width: 110px;
   height: 44px;
   padding: 6px 27px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.3;
   transition: transform .3s;
@@ -804,7 +804,7 @@ a.arrow-left, a.arrow-right {
   border-radius: 5px;
   width: 110px;
   height: 44px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.3;
 }
@@ -1119,4 +1119,4 @@ button:hover {
     height: 202px;
   }
 }
-/*# sourceMappingURL=index.7c372e4f.css.map */
+/*# sourceMappingURL=index.120705eb.css.map */

@@ -14,7 +14,8 @@ const headerSearch = document.querySelector('.header-search');
 const watchedButton = document.getElementById('watchedHeader');
 const paginationButtons = document.getElementById('pagination-container');
 const logo = document.getElementById('logo');
-import { getHomepage, clearGallery } from './gallery';
+import { getHomepage } from './gallery';
+import { clearGallery } from './renderGallery';
 
 // przełączanie widoczności podanych elementów
 const toggleVisibility = (elementToShow, elementToHide) => {

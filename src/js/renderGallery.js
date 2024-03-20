@@ -1,9 +1,9 @@
 // renderGallery.js
 import { fetchMovieDetails } from './api';
-import { getGenres } from './gallery-ML';
+import { getGenres } from './gallery';
 import { openModal } from './openModal';
 
-export const renderGallery = (dataGallery, rating) => {
+export const renderGallery = (dataGallery, rating = false) => {
   try {
     // Pobranie danych o filmach z galerii
     const movies = dataGallery;
@@ -50,11 +50,11 @@ export const renderGallery = (dataGallery, rating) => {
           // Zbudowanie kodu HTML dla karty filmu
           const movieCard = `
           <div class="movie-card" data-movie-id="${movie.id}">
-          <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
-          <div class="movie-details">
-          <p class="movie-title">${movie.title}</p>
-          <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
-          </div>
+            <img class="movie-poster" src="${posterPath}" alt="${movie.title}">
+            <div class="movie-details">
+              <p class="movie-title">${movie.title}</p>
+              <p class="movie-info">${categories} | ${releaseYear}${rate}</p>
+            </div>
           </div>
         `;
           return movieCard;

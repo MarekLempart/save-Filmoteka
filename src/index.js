@@ -6,7 +6,6 @@ import './js/dark-mode';
 import './js/dev-tools';
 import './js/firebaseAuthorization';
 import './js/gallery';
-// import './js/gallery-ML';
 import './js/header';
 import './js/localstorage';
 import './js/modal-goit-team';

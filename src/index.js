@@ -12,4 +12,5 @@ import './js/modal-goit-team';
 import './js/modal-movie';
 import './js/openModal';
 import './js/renderGallery';
+import './js/swiper';
 import './js/trailerModal';

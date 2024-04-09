@@ -1,8 +1,8 @@
 // gallery.js
-
 import { fetchSearchMovies, fetchTrendingMovies, genresName } from './api';
 import { createPagination, setCurrentPage } from './pagination';
-import { clearGallery, renderGallery } from './renderGallery'; // Dodano import funkcji związanych z galerią
+import { clearGallery, renderGallery } from './renderGallery';
+import { loadMoviePosters, onMoviePosterClick } from './swiper';
 
 export let homePageNo = 0;
 export let searPageNo = 1;
@@ -10,6 +10,7 @@ let isInfinityScrollActive = 0;
 let isInfinityScrollEnable = 0;
 let searchQuery;
 let totalPages;
+let swiper; // deklaracja zmiennej swiper
 
 // Funkcja pomocnicza do pobrania nazw gatunków na podstawie ich identyfikatorów
 export const getGenres = genreIds => {
@@ -228,4 +229,16 @@ infinityScroll.addEventListener('click', () => {
     window.addEventListener('scroll', loadMoreContent);
     isInfinityScrollEnable = 1;
   }
+});
+
+// Rejestrowanie obsługi kliknięcia na plakat filmu
+document.addEventListener('click', event => {
+  if (event.target.classList.contains('movie-poster-link')) {
+    onMoviePosterClick(event);
+  }
+});
+
+// Wywołanie funkcji ładowania plakatów filmów przy załadowaniu strony
+document.addEventListener('DOMContentLoaded', () => {
+  loadMoviePosters();
 });

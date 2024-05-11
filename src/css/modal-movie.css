@@ -40,11 +40,6 @@
   scale: 1.2;
 }
 
-/* zawartość okna modalnego z informacjami o filmie */
-.modal-container {
-  /* display: block; #fix 315*/
-}
-
 /* plakat filmu w kontenerze */
 .movie-poster-modal img {
   width: 100%;
